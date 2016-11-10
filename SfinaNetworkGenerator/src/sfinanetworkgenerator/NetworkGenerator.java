@@ -154,13 +154,13 @@ public class NetworkGenerator extends JApplet{
                 
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
                     path=  chooser.getSelectedFile().getAbsolutePath();
+                    
+                    writeLinkFlow(path);
+                    writeNodeFlow(path);
+                    writeLinkTopology(path);
+                    writeNodeTopology(path);
                 }
                 
-                System.out.println(path);
-                writeLinkFlow(path);
-                writeNodeFlow(path);
-                writeLinkTopology(path);
-                writeNodeTopology(path);
            } 
         });
 

@@ -23,6 +23,7 @@ public class PropertyField extends JPanel{
     public PropertyField(String labelTxt){
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setMaximumSize(new Dimension(300,30));
+        this.setPreferredSize(new Dimension(300,30));
         this.labelField.setText(labelTxt);
         this.labelField.setEditable(false);
         this.add(labelField);

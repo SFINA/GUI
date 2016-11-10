@@ -37,8 +37,13 @@ public class FieldsDialog extends JPanel{
         addField = new JButton("Add Field");
         removeField = new JButton("Remove Field");
         contentPane = new JPanel();
-        contentPane.setPreferredSize(new Dimension(300,100));
+        //contentPane.setPreferredSize(new Dimension(300,100));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        
+        scrollPane = new JScrollPane(contentPane);
+        scrollPane.setPreferredSize(new Dimension(310,200));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
         addField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 countFields++;
@@ -73,10 +78,7 @@ public class FieldsDialog extends JPanel{
             }
         });
         
-        scrollPane = new JScrollPane(contentPane);
-        scrollPane.setPreferredSize(new Dimension(310,200));
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
+  
         setLayout(new BorderLayout());
         
         add(scrollPane, BorderLayout.CENTER);
