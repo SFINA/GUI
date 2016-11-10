@@ -182,9 +182,13 @@ public class NetworkGenerator extends JApplet{
 		public SfinaNode create() {
                         i++;
                         SfinaNode l = new SfinaNode(i);
-                        ValuesDialog v = new ValuesDialog(nodeFields);
-                        JOptionPane.showConfirmDialog(null, v, "Edit Values", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-                        l.setValues(v.getValues());
+                        if(nodeFields.size()>0){
+                            ValuesDialog v = new ValuesDialog(nodeFields);
+                            JOptionPane.showConfirmDialog(null, v, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            l.setValues(v.getValues());
+                        }
+
+                        
 			return l;
 		}
     }
@@ -196,9 +200,13 @@ public class NetworkGenerator extends JApplet{
 		public SfinaLink create() {
                         i++;
                         SfinaLink l = new SfinaLink(i);
-                        ValuesDialog v = new ValuesDialog(linkFields);
-                        JOptionPane.showConfirmDialog(null, v, "Edit Values", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-                        l.setValues(v.getValues());
+                        
+                        if(linkFields.size()>0){
+                            ValuesDialog v = new ValuesDialog(linkFields);
+                            JOptionPane.showConfirmDialog(null, v, "Enter Link Properties", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            l.setValues(v.getValues());
+                        }
+
                         return l;
 		}
     }
