@@ -217,8 +217,8 @@ public class NetworkGenerator extends JApplet{
             // print header
             if(nodeFields.size()>0){
                 writer.print("id");
-                for(int i = 0;i<linkFields.size();i++){
-                    writer.print(columnSeparator+linkFields.get(i));
+                for(int i = 0;i<nodeFields.size();i++){
+                    writer.print(columnSeparator+nodeFields.get(i));
                 }
                 writer.print("\n");
 
