@@ -341,7 +341,7 @@ public class NetworkGenerator extends JApplet{
      */
     @SuppressWarnings("serial")
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("Sfina Network Generator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         final NetworkGenerator demo = new NetworkGenerator();
