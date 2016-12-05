@@ -39,10 +39,14 @@ import org.apache.commons.collections15.functors.MapTransformer;
 import org.apache.commons.collections15.map.LazyMap;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
+import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.annotations.AnnotationControls;
@@ -51,13 +55,17 @@ import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
-
-
+import java.lang.Integer;
+import javax.swing.JScrollPane;
 /**
  * Shows how  to create a graph editor with JUNG.
  * Mouse modes and actions are explained in the help text.
@@ -74,11 +82,14 @@ public class NetworkGenerator extends JApplet{
 	 * 
 	 */
 	private static final long serialVersionUID = -2023243689258876709L;
-        private static ArrayList<String> nodeFields;
-        private static ArrayList<String> linkFields;
+        private static ArrayList<String> nodeFields = new ArrayList<String>();
+        private static ArrayList<String> linkFields = new ArrayList<String>();
         private static String path = "TopologyFiles/input/";
         private static final Logger logger = Logger.getLogger(SfinaNetworkGenerator.class);
-	/**
+	Factory<SfinaNode> vertexFactory;
+        Factory<SfinaLink> edgeFactory;
+        
+        /**
      * the graph
      */
     Graph<SfinaNode,SfinaLink> graph;
@@ -101,7 +112,7 @@ public class NetworkGenerator extends JApplet{
         // create a simple graph for the demo
         graph = new DirectedSparseMultigraph<SfinaNode,SfinaLink>();
 
-        this.layout = new StaticLayout<SfinaNode,SfinaLink>(graph, 
+        this.layout = new FRLayout<SfinaNode,SfinaLink>(graph, 
         	new Dimension(600,600));
         
         vv =  new VisualizationViewer<SfinaNode,SfinaLink>(layout);
@@ -118,8 +129,8 @@ public class NetworkGenerator extends JApplet{
         Container content = getContentPane();
         final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
         content.add(panel);
-        Factory<SfinaNode> vertexFactory = new VertexFactory();
-        Factory<SfinaLink> edgeFactory = new EdgeFactory();
+        vertexFactory = new VertexFactory();
+        edgeFactory = new EdgeFactory();
         
         final SfinaModalGraphMouse<SfinaNode,SfinaLink> graphMouse = 
         	new SfinaModalGraphMouse<SfinaNode,SfinaLink>(vv.getRenderContext(), vertexFactory, edgeFactory);
@@ -136,12 +147,14 @@ public class NetworkGenerator extends JApplet{
                 scaler.scale(vv, 1.1f, vv.getCenter());
             }
         });
+
         JButton minus = new JButton("-");
         minus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 scaler.scale(vv, 1/1.1f, vv.getCenter());
             }
         });
+
         JButton export = new JButton("Export Network");
         export.addActionListener(new ActionListener(){
            public void actionPerformed(ActionEvent e){
@@ -163,40 +176,68 @@ public class NetworkGenerator extends JApplet{
                 
            } 
         });
-
+        
+//        JButton loadNet = new JButton("Load Network");
+//        loadNet.addActionListener(new ActionListener(){
+//            // TODO, check if the location is invalid
+//            public void actionPerformed(ActionEvent e){
+//                JFileChooser chooser = new JFileChooser(); 
+//                chooser.setCurrentDirectory(new java.io.File("."));
+//                chooser.setDialogTitle("Select Network Location");
+//                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//                chooser.setAcceptAllFileFilterUsed(false);
+//                
+//                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
+//                    path=  chooser.getSelectedFile().getAbsolutePath();
+//                    //loadLinkFlow(path);
+//                    loadNodeFlow(path);
+//                    loadLinkTopology(path);
+//                    loadNodeTopology(path);
+//                }
+//            }
+//        });
+        
 
         JPanel controls = new JPanel();
         controls.add(plus);
         controls.add(minus);
         JComboBox modeBox = graphMouse.getModeComboBox();
         controls.add(modeBox);
+//        controls.add(loadNet);
         controls.add(export);
-        
         content.add(controls, BorderLayout.SOUTH);
     }
             
     class VertexFactory implements Factory<SfinaNode> {
-
     	int i=0;
-        
 		public SfinaNode create() {
                         i++;
                         SfinaNode l = new SfinaNode(i);
                         if(nodeFields.size()>0){
                             ValuesDialog v = new ValuesDialog(nodeFields);
-                            JOptionPane.showConfirmDialog(null, v, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            
+                            JScrollPane jsp = new JScrollPane(v);
+                            jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                            //jsp.setBounds(50,30,250,250);
+                            JPanel jp = new JPanel();
+                            jp.setPreferredSize(new Dimension(300,300));
+                            jp.add(jsp);
+                            
+                            JOptionPane.showConfirmDialog(null, jp, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            
+                            //JOptionPane.showConfirmDialog(null, v, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
                             l.setValues(v.getValues());
                         }
-
-                        
 			return l;
 		}
+                
+                public void increaseIndex(){
+                    i++;
+                };
     }
     
     class EdgeFactory implements Factory<SfinaLink> {
-
     	int i=0;
-    	
 		public SfinaLink create() {
                         i++;
                         SfinaLink l = new SfinaLink(i);
@@ -206,11 +247,17 @@ public class NetworkGenerator extends JApplet{
                             JOptionPane.showConfirmDialog(null, v, "Enter Link Properties", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
                             l.setValues(v.getValues());
                         }
-
                         return l;
 		}
+                
+                public void increaseIndex(){
+                    i++;
+                };
     }
-        
+    
+    //======================================================================================        
+    //===================================== Exporters ======================================        
+    //======================================================================================        
     public void writeNodeFlow(String path){
         String location = path+"/flow/Node.txt";
         String columnSeparator = ",";
@@ -333,8 +380,135 @@ public class NetworkGenerator extends JApplet{
             ex.printStackTrace();
         }
     }
+
+    //====================================================================================
+    //===================================== Loaders ======================================
+    //====================================================================================
+    public HashMap<Integer,Pair<Integer>> loadLinkTopology(String path){
+        String location = path+"/topology/links.txt";
+        String columnSeparator = ",";
+        
+        HashMap<Integer, Pair<Integer>> map = new HashMap<Integer,Pair<Integer>>();
+        
+        File file = new File(location);
+        Scanner scr = null;
+        try {
+            scr = new Scanner(file);
+            // disregard the header
+            scr.next();
+            
+            while(scr.hasNext()){
+                ArrayList<String> values = new ArrayList<String>();
+                StringTokenizer st = new StringTokenizer(scr.next(), columnSeparator);
+                // get id and construct the Link
+                int id = Integer.parseInt(st.nextToken());
+                int src = Integer.parseInt(st.nextToken());
+                int dest = Integer.parseInt(st.nextToken());
+                // firs values is linkID and then rest are source and destination
+                map.put(id, new Pair(src,dest));
+                // disregard the status
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return map;
+    }
     
+//    public void loadNodeTopology(String path){
+//    }
     
+    public void loadLinkFlow(String path, HashMap<Integer, Pair<Integer>> map){
+        // First Load headings and set Fields
+        //System.out.print(map);
+        String location = path+"/flow/links.txt";
+        String columnSeparator = ",";
+        linkFields = new ArrayList<String>();
+        
+        File file = new File(location);
+        Scanner scr = null;
+        try {
+            scr = new Scanner(file);
+            if(scr.hasNext()){
+                StringTokenizer st = new StringTokenizer(scr.next(), columnSeparator);
+                // Discard the first token as it is id.
+                st.nextToken();
+                while(st.hasMoreTokens()){
+                    String stateName = st.nextToken();
+                    // add all the fields to array;
+                    linkFields.add(stateName);
+                }
+            }
+    
+            while(scr.hasNext()){
+                ArrayList<String> values = new ArrayList<String>();
+                StringTokenizer st = new StringTokenizer(scr.next(), columnSeparator);
+                // get id and construct the Link
+                String id = st.nextToken();
+                SfinaLink l = new SfinaLink(Integer.parseInt(id));
+                while (st.hasMoreTokens()) {
+                    values.add(st.nextToken());
+		}
+                l.setValues(values);
+                SfinaNode source = nodeFromId(map.get(Integer.parseInt(id)).getFirst());
+                SfinaNode dest = nodeFromId(map.get(Integer.parseInt(id)).getSecond());
+                graph.addEdge(l, source, dest, EdgeType.DIRECTED);
+                ((EdgeFactory)edgeFactory).increaseIndex();
+            }
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public SfinaNode nodeFromId(int id){
+        for(SfinaNode n:graph.getVertices()){
+            if(n.getID()==id){
+                //System.out.println(id);
+                return n;
+                
+            }
+        }
+        return null;
+    }
+    
+    public void loadNodeFlow(String path){
+        // First Load headings and set fields
+        String location = path+"/flow/nodes.txt";
+        String columnSeparator = ",";
+        File file = new File(location);
+        Scanner scr = null;
+        nodeFields = new ArrayList<String>();
+        try {
+            scr = new Scanner(file);
+            if(scr.hasNext()){
+                StringTokenizer st = new StringTokenizer(scr.next(), columnSeparator);
+                st.nextToken();
+                while(st.hasMoreTokens()){
+                    String stateName = st.nextToken();
+                    nodeFields.add(stateName);
+                }
+            }
+    
+            while(scr.hasNext()){
+                ArrayList<String> values = new ArrayList<String>();
+                StringTokenizer st = new StringTokenizer(scr.next(), columnSeparator);
+                // get id and construct the Link
+                String id = st.nextToken();
+                SfinaNode n = new SfinaNode(Integer.parseInt(id));
+                while (st.hasMoreTokens()) {
+                    values.add(st.nextToken());
+		}
+                n.setValues(values);
+                
+                // add node to the graph
+                graph.addVertex(n);
+                ((VertexFactory)vertexFactory).increaseIndex();
+            }   
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
     
      /**
      * a driver for this demo
@@ -350,14 +524,42 @@ public class NetworkGenerator extends JApplet{
         frame.pack();
         frame.setVisible(true);
         
-        FieldsDialog nF = new FieldsDialog();
-        JOptionPane.showConfirmDialog(null, nF, "Enter Node Fields", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-        nodeFields = nF.getFields();
-        
-        FieldsDialog lF = new FieldsDialog();
-        JOptionPane.showConfirmDialog(null, lF, "Enter Link Fields", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-        linkFields = lF.getFields();
-    
+        // give option either to load or create new network
+        Object[] opt = {"Load Existing Data","Start From Scratch"};
+        int result = JOptionPane.showOptionDialog(null,"Edit Mode Selection","Select method to proceed network creation",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,opt,null);
+        if(result==JOptionPane.NO_OPTION){
+                    
+            FieldsDialog nF = new FieldsDialog();
+            JOptionPane.showConfirmDialog(null, nF, "Enter Node Fields", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+            nodeFields = nF.getFields();
+
+            FieldsDialog lF = new FieldsDialog();
+            JOptionPane.showConfirmDialog(null, lF, "Enter Link Fields", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+            linkFields = lF.getFields();
+        } else {
+            // TODO, check if the location is invalidYES
+            JFileChooser chooser = new JFileChooser(); 
+            chooser.setCurrentDirectory(new java.io.File("."));
+            chooser.setDialogTitle("Select Network Location");
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
+                path=  chooser.getSelectedFile().getAbsolutePath();
+                demo.loadNodeFlow(path);
+                HashMap<Integer, Pair<Integer>> map = demo.loadLinkTopology(path);
+                demo.loadLinkFlow(path,map);
+                
+                //demo.setLayout(new );
+                //demo.layout = new StaticLayout<SfinaNode,SfinaLink>(demo.graph, new Dimension(600,600));
+                //demo.vv.doLayout();
+                //demo.vv.setLayout();
+                demo.vv.repaint();
+            }
+
+        }
+
     }
     
 }
+// TODO Reformat Topology Loader and Flow Loader and corresponding Exporters

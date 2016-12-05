@@ -7,6 +7,7 @@ package sfinanetworkgenerator;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import static java.lang.Integer.min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.BoxLayout;
@@ -34,23 +35,25 @@ public class ValuesDialog extends JPanel{
         valueList = new ArrayList<String>();
         this.fields = fields;
         pFields = new ArrayList<PropertyField>();
-        setPreferredSize(new Dimension(300,fields.size()*30+10));
+        
+        //setPreferredSize(new Dimension(300,min(fields.size()*30+50,300)));
         for (String s:fields){
             PropertyField p = new PropertyField(s);
             pFields.add(p);
         }
 
         contentPane = new JPanel();
-        contentPane.setPreferredSize(new Dimension(300, fields.size()*30));
+        //contentPane.setPreferredSize(new Dimension(250, min(fields.size()*30,300)));
+        //contentPane.setPreferredSize(new Dimension(300, 500));
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         for(PropertyField p : pFields){
             contentPane.add(p);
         }
         
-        
-        
         scrollPane = new JScrollPane(contentPane);
-        
+        //scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        //scrollPane.setBounds(20,20,250,250);
+        //setPreferredSize(new Dimension(350,300));
         add(scrollPane);
         
         
