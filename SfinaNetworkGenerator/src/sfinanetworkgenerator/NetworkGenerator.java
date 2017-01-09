@@ -216,16 +216,9 @@ public class NetworkGenerator extends JApplet{
                         if(nodeFields.size()>0){
                             ValuesDialog v = new ValuesDialog(nodeFields);
                             
-                            JScrollPane jsp = new JScrollPane(v);
-                            jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-                            //jsp.setBounds(50,30,250,250);
-                            JPanel jp = new JPanel();
-                            jp.setPreferredSize(new Dimension(300,300));
-                            jp.add(jsp);
-                            
-                            JOptionPane.showConfirmDialog(null, jp, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-                            
-                            //JOptionPane.showConfirmDialog(null, v, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            JScrollPane jsp = new JScrollPane(v,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                            jsp.setPreferredSize(new Dimension(320,300));
+                            JOptionPane.showConfirmDialog(null, jsp, "Enter Node Properties: ", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
                             l.setValues(v.getValues());
                         }
 			return l;
@@ -243,8 +236,11 @@ public class NetworkGenerator extends JApplet{
                         SfinaLink l = new SfinaLink(i);
                         
                         if(linkFields.size()>0){
+                            
                             ValuesDialog v = new ValuesDialog(linkFields);
-                            JOptionPane.showConfirmDialog(null, v, "Enter Link Properties", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+                            JScrollPane jsp = new JScrollPane(v,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                            jsp.setPreferredSize(new Dimension(320,300));
+                            JOptionPane.showConfirmDialog(null, jsp, "Enter Link Properties", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
                             l.setValues(v.getValues());
                         }
                         return l;

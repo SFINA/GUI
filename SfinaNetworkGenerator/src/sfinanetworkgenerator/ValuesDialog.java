@@ -75,14 +75,8 @@ public class ValuesDialog extends JPanel{
 
         ArrayList<String> al = new ArrayList<>(Arrays.asList("v1","v2","v3","v4","v5","v6","v7","v8"));
         ValuesDialog v = new ValuesDialog(al);
-//        JFrame frame = new JFrame("Values Dialog");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-//        frame.getContentPane().add(v, BorderLayout.CENTER);
-//        frame.pack();
-//        frame.setVisible(true);
-          JOptionPane.showConfirmDialog(null, v, "Edit Values", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
-//        JOptionPane.showConfirmDialog(frame,v,"",JOptionPane.INFORMATION_MESSAGE);
-//        System.out.println(v.getValues());
+        JScrollPane jsp = new JScrollPane(v,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jsp.setPreferredSize(new Dimension(320,200));
+        JOptionPane.showConfirmDialog(null, jsp, "Enter Link Properties", JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE);
     }
 }
