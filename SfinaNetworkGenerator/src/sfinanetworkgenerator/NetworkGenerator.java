@@ -516,6 +516,10 @@ public class NetworkGenerator extends JApplet{
         this.linkFields = linkFields;
     }
     
+    public VisualizationViewer getVisualizationViewer(){
+        return vv;
+    }
+    
     
      /**
      * a driver for this demo
