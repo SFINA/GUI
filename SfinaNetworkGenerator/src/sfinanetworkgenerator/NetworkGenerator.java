@@ -127,7 +127,8 @@ public class NetworkGenerator extends JApplet{
         vv.setVertexToolTipTransformer(vv.getRenderContext().getVertexLabelTransformer());
 
         Container content = getContentPane();
-        final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
+        //final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
+        GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
         content.add(panel);
         vertexFactory = new VertexFactory();
         edgeFactory = new EdgeFactory();
@@ -505,6 +506,16 @@ public class NetworkGenerator extends JApplet{
             ex.printStackTrace();
         }
     }
+    
+    public void setNodeFields(ArrayList<String> nodeFields){
+        this.nodeFields = nodeFields;
+    }
+    
+    
+    public void setLinkFields(ArrayList<String> linkFields){
+        this.linkFields = linkFields;
+    }
+    
     
      /**
      * a driver for this demo
