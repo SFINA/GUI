@@ -5,7 +5,7 @@
  */
 package experiment;
 
-import gui.*;
+import core.PowerFlowCascadeGUI;
 
 /**
  *
