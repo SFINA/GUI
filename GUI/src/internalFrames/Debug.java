@@ -37,7 +37,7 @@ public class Debug extends JInternalFrame{
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
-        super.setSize(500,170);
+        super.setSize(600,250);
         super.setLocation((int)(orig.getX()+dim.getWidth()*1/5), (int)(orig.getY()+dim.getHeight()*3/5));
 
         

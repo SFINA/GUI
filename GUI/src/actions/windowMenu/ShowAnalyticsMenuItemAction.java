@@ -28,8 +28,10 @@ public class ShowAnalyticsMenuItemAction implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        JInternalFrame iFrame = new Analytics(owner);
-        ((PowerFlowCascadeGUI3)owner).getDesktop().add(iFrame);
-        iFrame.setVisible(true);
+        if(((PowerFlowCascadeGUI3)owner).getAnalyticFrame().isClosed()){
+            ((PowerFlowCascadeGUI3)owner).initAnalyticsFrame();
+        }
+        
+        ((PowerFlowCascadeGUI3)owner).setAnalyticFrameVisible(Boolean.TRUE);
     }
 }

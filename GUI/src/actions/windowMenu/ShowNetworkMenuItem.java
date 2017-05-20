@@ -5,6 +5,7 @@
  */
 package actions.windowMenu;
 
+import core.PowerFlowCascadeGUI3;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -23,7 +24,13 @@ public class ShowNetworkMenuItem implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        if(((PowerFlowCascadeGUI3)owner).getNetworkEditor().isClosed()){
+            ((PowerFlowCascadeGUI3)owner).initNetworkEditor();
+        }
+        
+        ((PowerFlowCascadeGUI3)owner).setNetworkEditorVisible(Boolean.TRUE);
+        
     }
     
 }

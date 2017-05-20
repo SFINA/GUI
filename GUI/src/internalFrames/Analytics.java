@@ -7,6 +7,7 @@ package internalFrames;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.beans.PropertyVetoException;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
@@ -23,9 +24,11 @@ public class Analytics extends JInternalFrame{
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
-        super.setSize(250,200);
-        super.setLocation((int)(orig.getX()+dim.getWidth()*5/9), (int)(orig.getY()+dim.getHeight()/4));
+        super.setSize(300,250);
+
+        //super.setLocation((int)(orig.getX()+dim.getWidth()*5/9), (int)(orig.getY()+dim.getHeight()*2/5));
     }
+    
     
     
 }

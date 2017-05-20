@@ -19,12 +19,13 @@ public class NetworkEditor extends JInternalFrame {
     JFrame owner;
     
     public NetworkEditor(JFrame owner){
-        super("Network Editor",true,true,true,true);
+        super("Network Viewer",true,true,true,true);
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
-        super.setSize(600,600);
-        super.setLocation((int)(orig.getX())+50, (int)(orig.getY()+10));
+        super.setSize(450,400);
+        //super.setLocation((int)(orig.getX()+dim.getWidth()*5/9), (int)(orig.getY()+10));
+        //super.setLocation(0,0);
     }
     
 }

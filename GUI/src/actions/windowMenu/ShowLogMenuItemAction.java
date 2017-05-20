@@ -27,10 +27,14 @@ public class ShowLogMenuItemAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JInternalFrame iFrame = new Debug(owner);
-        ((PowerFlowCascadeGUI3)owner).getDesktop().add(iFrame);
-        iFrame.pack();
-        iFrame.setVisible(true);
+        if(((PowerFlowCascadeGUI3)owner).getDebugFrame().isClosed()){
+            ((PowerFlowCascadeGUI3)owner).initDebugFrame();
+        }
+        
+        ((PowerFlowCascadeGUI3)owner).setDebugFrameVisible(Boolean.TRUE);
+        
     }
+    
+    
     
 }

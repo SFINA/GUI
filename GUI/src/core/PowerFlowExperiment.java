@@ -21,6 +21,7 @@ package core;
 import replayer.BenchmarkLogReplayer;
 import agent.PowerCascadeAgent;
 import java.io.File;
+import javax.swing.JFrame;
 import org.apache.log4j.Logger;
 import protopeer.Experiment;
 import protopeer.Peer;
@@ -32,7 +33,7 @@ import protopeer.util.quantities.Time;
  * Reduces capacity of Links successively in each time step. Up to a total of 50% reduction. Goal is to trigger cascades.
  * @author Ben
  */
-public class PowerFlowExperiment extends SimulatedExperiment{
+public class PowerFlowExperiment extends SimulatedExperiment implements Runnable{
     
     private static final Logger logger = Logger.getLogger(PowerFlowExperiment.class);
     
@@ -46,20 +47,23 @@ public class PowerFlowExperiment extends SimulatedExperiment{
     private final static int runDuration=29;
     private final static int N=1;
     
-    public PowerFlowExperiment(String expSeqNum){
+    private JFrame owner;
+    
+    public PowerFlowExperiment(String expSeqNum, JFrame owner){
         this.expSeqNum = expSeqNum;
         this.experimentID = "experiment-"+expSeqNum;
+        this.owner = owner;
     }
     
 //    public void 
     
-    public void runExperiment(){
+    public void run(){
         double totCapacityChange = 0.5;
         double steps = runDuration-bootstrapTime/runTime;
         double relCapacityChangePerStep = Math.pow(totCapacityChange, 1/steps);
         
         Experiment.initEnvironment();
-        final PowerFlowExperiment test = new PowerFlowExperiment(expSeqNum);
+        final PowerFlowExperiment test = new PowerFlowExperiment(expSeqNum, null);
         test.init();
         final File folder = new File(peersLogDirectory+experimentID);
         clearExperimentFile(folder);
@@ -79,13 +83,13 @@ public class PowerFlowExperiment extends SimulatedExperiment{
                 return newPeer;
             }
         };
+        
         test.initPeers(0,N,peerFactory);
         test.startPeers(0,N);
         //run the simulation
+        ((PowerFlowCascadeGUI3)owner).notifyStatus(true);
         test.runSimulation(Time.inSeconds(runDuration));
-        
-        // Get and display results
-        //BenchmarkLogReplayer replayer=new BenchmarkLogReplayer(expSeqNum, 0, 1000);
+        ((PowerFlowCascadeGUI3)owner).notifyStatus(false);
     }
 
     public final void clearExperimentFile(File experiment){
@@ -100,5 +104,17 @@ public class PowerFlowExperiment extends SimulatedExperiment{
             }
         }
         experiment.delete();
+    }
+    
+    
+    public void clear(){
+        
+    }
+    
+    
+    public static void main(String args[]){
+        final PowerFlowExperiment exp = new PowerFlowExperiment("Case30RateReduction", null);
+        exp.run();
+        
     }
 }

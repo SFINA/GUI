@@ -69,7 +69,7 @@ public class PowerFlowCascadeGUI extends javax.swing.JFrame {
         
         
         jTree1 = new javax.swing.JTree(addNodes(null,new File(expLocation)));
-        jTree1.addMouseListener(new TreeMouseListener(jTree1));
+        jTree1.addMouseListener(new TreeMouseListener(jTree1, this));
         
         jPanel1 = new javax.swing.JPanel();
         runButton = new javax.swing.JButton();
@@ -143,8 +143,8 @@ public class PowerFlowCascadeGUI extends javax.swing.JFrame {
                 // TODO run the experiment
                 expSeqNum = (String)experimentComboBox.getSelectedItem();
                 debugOutput.setText(debugOutput.getText()+"\nOption "+expSeqNum+" was selected.");
-                PowerFlowExperiment exp = new PowerFlowExperiment(expSeqNum);
-                exp.runExperiment();
+                PowerFlowExperiment exp = new PowerFlowExperiment(expSeqNum, null);
+                exp.run();
             }
         });
         

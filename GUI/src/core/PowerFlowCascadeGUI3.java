@@ -19,20 +19,49 @@ import actions.runMenu.RunMenuItemAction;
 import actions.windowMenu.ShowAnalyticsMenuItemAction;
 import actions.windowMenu.ShowExperimentExplorerMenuItemAction;
 import actions.windowMenu.ShowLogMenuItemAction;
+import internalFrames.Analytics;
+import internalFrames.Debug;
+import internalFrames.ExperimentExplorer;
+import internalFrames.NetworkEditor;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import javax.swing.JInternalFrame;
+import javax.swing.JProgressBar;
+import protopeer.SimulatedExperiment;
 
 /**
  *
  * @author dinesh
  */
 public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
-
+    public SimulatedExperiment exp;
+    public String expSeqNum = "01";
     /**
      * Creates new form PowerFlowCascadeGUI2
      */
+    
+    
     public PowerFlowCascadeGUI3() {
+        setTitle(this.getClass().getSimpleName());
         initComponents();
     }
-
+    
+    public SimulatedExperiment getExperiment(){
+        return exp;
+    }
+    
+    public String getExpSeqNum(){
+        return expSeqNum;
+    }
+    
+    public void setExpSeqNum(String seqNum){
+        System.out.println("ExpSeqNum set in GUI3");
+         expSeqNum = seqNum;
+         configurations.put("expSeqNum",seqNum);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,9 +70,16 @@ public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
-        desktop = new javax.swing.JDesktopPane();
         
+        //this.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        desktop1 = new javax.swing.JDesktopPane();
+        desktop2 = new javax.swing.JDesktopPane();
+        desktop3 = new javax.swing.JDesktopPane();
+        statusPane = new javax.swing.JDesktopPane();
+        
+        desktop = new javax.swing.JDesktopPane();
+        setPreferredSize(new Dimension(1200,800));
+        desktop.setPreferredSize(new Dimension(1200,800));
         menuBar = new javax.swing.JMenuBar();
         
         fileMenu = new javax.swing.JMenu("File");
@@ -52,7 +88,7 @@ public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu("Edit");
         createNetworkMenuItem = new javax.swing.JMenuItem("Create Network");
         editNetworkMenuItem = new javax.swing.JMenuItem("Edit Network");
-        editEventsMenuItem = new javax.swing.JMenuItem("Edit Events");
+        editEventsMenuItem = new javax.swing.JMenuItem("Add Events");
         editSfinaParametersMenuItem = new javax.swing.JMenuItem("Edit Sfina Parameters");
         editBackendParametersMenuItem = new javax.swing.JMenuItem("Edit Backend Parameters");
         experimentMenu = new javax.swing.JMenu("Experiment");
@@ -120,27 +156,220 @@ public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
         helpMenu.add(helpMenuItem);
         helpMenu.add(aboutMenuItem);
         menuBar.add(helpMenu);
-
+        
         setJMenuBar(menuBar);
-
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 1029, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktop1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(desktop3, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+                    .addComponent(desktop)))
+            .addComponent(statusPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 500, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(desktop3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(desktop1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusPane, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
+        
+        /*
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktop1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 600, Short.MAX_VALUE))
+                    .addComponent(desktop3)))
+                .addComponent(statusPane)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(desktop1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(desktop3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(statusPane, javax.swing.GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE))
+        );
+        */
+        
+        //getContentPane().setLayout(new BorderLayout(this.getContentPane()));
+        label = new StatusBar();
+        //statusPane.add(label);
+        //desktop3.setLayout(new BorderLayout());
+        //desktop3.add(label,BorderLayout.SOUTH);
+        /*
+        getContentPane().add(desktop, BorderLayout.CENTER);
+        getContentPane().add(label, BorderLayout.SOUTH);
+        */
+        
+        statusPane.setLayout(new BorderLayout());
+        statusPane.add(label, BorderLayout.CENTER);
+        
         pack();
+        //setResizable(false);
+        initInternalFrames();
+        sbw=new StatusBarSwingWorker(label);
+    
+        
+        
+    }
+    
+    public StatusBarSwingWorker getStatusBarSwingWorker(){
+        return sbw;
+    }
+    
+    public void initDebugFrame(){
+        // Debug Frame
+        debug= new Debug(this);
+        //this.getDesktop().add(debug);
+        desktop3.add(debug,BorderLayout.CENTER);
+        debugFrameVisible = true;
+        debug.setVisible(debugFrameVisible);
+        try {
+            debug.setMaximum(true);
+        } catch (PropertyVetoException e) {
+            // DO SOMETHING
+        }
+    } 
+    
+    
+    public void initAnalyticsFrame(){
+        
+        analytics= new Analytics(this);
+        //this.getDesktop().add(analytics);
+        desktop2.add(analytics);
+        analyticsFrameVisible = true;
+        analytics.setVisible(analyticsFrameVisible);
+        //networkEditor.setPreferredSize(new Dimension(Integer.MAX_VALUE, 250));
+        
+        
+        try {
+            analytics.setMaximum(true);
+        } catch (PropertyVetoException e) {
+            // DO SOMETHING
+        }
+        
+        
+    }
+    
+    public void initExperimentExplorer(){
+        
+        experimentExplorer= new ExperimentExplorer(this);
+        //this.getDesktop().add(experimentExplorer);
+        desktop1.add(experimentExplorer);
+        experimentExplorerFrameVisible = true;
+        experimentExplorer.setVisible(experimentExplorerFrameVisible);
+        try {
+            experimentExplorer.setMaximum(true);
+        } catch (PropertyVetoException e) {
+            // DO SOMETHING
+        }
+    }
+    
+    public void initNetworkEditor(){
+        
+        networkEditor= new NetworkEditor(this);
+        //this.getDesktop().add(networkEditor);
+        desktop2.add(networkEditor);
+        networkEditorFrameVisible = true;
+        networkEditor.setVisible(networkEditorFrameVisible);
+        //networkEditor.setPreferredSize(new Dimension(Integer.MAX_VALUE, 250));
+        /*
+        try {
+            networkEditor.setMaximum(true);
+        } catch (PropertyVetoException e) {
+            // DO SOMETHING
+        }
+        */
+    }
+    
+    private void initInternalFrames(){
+        
+        initDebugFrame();
+        
+        initAnalyticsFrame();
+        
+        initExperimentExplorer();
+        
+        initNetworkEditor();
+        
+    };
+    
+    
+    public void setDebugFrameVisible(Boolean bool){
+        debug.setVisible(bool);
+    }
+    
+    
+    
+    public void setExperimentExplorerFrameVisible(Boolean bool){
+        experimentExplorer.setVisible(bool);
     }
 
+    
+    public void setNetworkEditorVisible(Boolean bool){
+        networkEditor.setVisible(bool);
+    }
+
+    
+    public void setAnalyticFrameVisible(Boolean bool){
+        
+        analytics.setVisible(bool);
+    }
+
+    
+    public JInternalFrame getDebugFrame(){
+        return debug;
+    }
+    
+    
+    public JInternalFrame getExperimentExplorer(){
+        return experimentExplorer;
+    }
+
+    
+    public JInternalFrame getNetworkEditor(){
+        return networkEditor;
+    }
+
+    
+    public JInternalFrame getAnalyticFrame(){
+        return analytics;
+    }
+
+    
     public javax.swing.JDesktopPane getDesktop(){
         return desktop;
     }
 
+    public void notifyStatus(Boolean bool){ // true means running and false means not running
+        experimentRunning = bool;
+        label.setStatusRunning(bool);
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -173,7 +402,23 @@ public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
         });
     }
 
+    public void setProgress(Integer i){
+        if(sbw==null||!sbw.isCancelled())
+        sbw.cancel(true);
+        label.setValue(i);
+    }
+    
+    public HashMap<String, String> getExperimentConfigurations(){
+        return configurations;
+    }
+    
+    public void setExperimentConfigurations(HashMap<String, String> map) {
+        this.configurations = map;
+    }
+    
     // variables                 
+    private HashMap<String, String> configurations = new HashMap<String, String>();
+    
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem configurationsMenuItem;
     private javax.swing.JMenuItem createNetworkMenuItem;
@@ -197,5 +442,27 @@ public class PowerFlowCascadeGUI3 extends javax.swing.JFrame {
     private javax.swing.JMenuItem showNetworkMenuItem;
     private javax.swing.JMenuItem cancelMenuItem;
     private javax.swing.JMenu windowMenu;
-
+    
+    private javax.swing.JInternalFrame analytics;
+    private javax.swing.JInternalFrame debug;
+    private javax.swing.JInternalFrame experimentExplorer;
+    private javax.swing.JInternalFrame networkEditor;
+            
+    private Boolean  analyticsFrameVisible;
+    private Boolean debugFrameVisible;
+    private Boolean experimentExplorerFrameVisible;
+    private Boolean networkEditorFrameVisible;
+    
+    private Boolean experimentRunning;
+    
+    private StatusBar label;
+    
+    private StatusBarSwingWorker sbw;
+        private javax.swing.JDesktopPane desktop1;
+    private javax.swing.JDesktopPane desktop2;
+    private javax.swing.JDesktopPane desktop3;
+    private javax.swing.JDesktopPane statusPane;
+    
+    
+    
 }

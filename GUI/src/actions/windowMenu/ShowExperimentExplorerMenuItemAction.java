@@ -28,9 +28,14 @@ public class ShowExperimentExplorerMenuItemAction implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        JInternalFrame iFrame = new ExperimentExplorer(owner);
-        ((PowerFlowCascadeGUI3)owner).getDesktop().add(iFrame);
-        iFrame.setVisible(true);
+        if(((PowerFlowCascadeGUI3)owner).getExperimentExplorer().isClosed()){
+            ((PowerFlowCascadeGUI3)owner).initExperimentExplorer();
+        }
+        
+        
+
+        ((PowerFlowCascadeGUI3)owner).setExperimentExplorerFrameVisible(Boolean.TRUE);
+        
     }
     
 }

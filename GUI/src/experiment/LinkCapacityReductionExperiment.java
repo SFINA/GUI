@@ -71,6 +71,7 @@ public class LinkCapacityReductionExperiment extends SimulatedExperiment{
                 return newPeer;
             }
         };
+        
         test.initPeers(0,N,peerFactory);
         test.startPeers(0,N);
         //run the simulation

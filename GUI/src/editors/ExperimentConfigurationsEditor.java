@@ -17,7 +17,39 @@ public class ExperimentConfigurationsEditor extends javax.swing.JPanel {
     public ExperimentConfigurationsEditor() {
         initComponents();
     }
-
+    
+    public String getBackendType(){
+        return jTextField1.getText();
+    }
+    
+    public String getExpSeqNum(){
+        return jTextField2.getText();
+    }
+    
+    public String getPeersLogDirectory(){
+        return jTextField3.getText();
+    }
+    
+    public String getExperimentFolder(){
+        return jTextField4.getText();
+    }
+    
+    public String getBootstrapTime(){
+        return jTextField5.getText();
+    }
+    
+    public String getRunTime(){
+        return jTextField6.getText();
+    }
+    
+    public String getRunDuration(){
+        return jTextField7.getText();
+    }
+    
+    public String getN(){
+        return jTextField8.getText();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

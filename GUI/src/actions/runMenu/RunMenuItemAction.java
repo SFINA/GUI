@@ -5,9 +5,12 @@
  */
 package actions.runMenu;
 
+import core.PowerFlowCascadeGUI3;
 import core.PowerFlowExperiment;
+import core.StatusBarSwingWorker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.JFrame;
 
 /**
@@ -27,10 +30,33 @@ public class RunMenuItemAction implements ActionListener {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         //expSeqNum = (String)experimentComboBox.getSelectedItem();
         //debugOutput.setText(debugOutput.getText()+"\nOption "+expSeqNum+" was selected.");
-        String expSeqNum = "01";
-        PowerFlowExperiment exp = new PowerFlowExperiment(expSeqNum);
-        exp.runExperiment();
-    
+        
+        HashMap<String, String> map = ((PowerFlowCascadeGUI3)owner).getExperimentConfigurations();
+        String expSeqNum="01";
+        if(map!=null && !(map.isEmpty())){
+            expSeqNum = map.get("expSeqNum");
+            System.out.println("Map Not Null");
+        }
+        
+        //PowerFlowExperiment exp = (PowerFlowExperiment)((PowerFlowCascadeGUI3)owner).getExperiment();
+        //exp.run();
+        
+        PowerFlowExperiment exp = new PowerFlowExperiment(expSeqNum, owner);
+        Thread t = new Thread(exp);
+        t.start();
+        
+        
+        
+        //exp.run();
+        
+        
+//((PowerFlowCascadeGUI3)owner).notifyStatus(true);
+        
+        //StatusBarSwingWorker sbw= ((PowerFlowCascadeGUI3)owner).getStatusBarSwingWorker();
+        //sbw.execute();
+        //exp.run();
+        //sbw.cancel(true);
+        //((PowerFlowCascadeGUI3)owner).setProgress(100);
     }
     
 }

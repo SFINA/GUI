@@ -27,7 +27,6 @@ public class EditEventsMenuItemAction  implements ActionListener  {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         EventsEditor editor = new EventsEditor();
         Object[] options = {"Save","Cancel"};
-        JOptionPane.showOptionDialog(owner, editor,"Edit Events",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
+        JOptionPane.showOptionDialog(owner, editor,"Add Events",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
     }
-    
 }

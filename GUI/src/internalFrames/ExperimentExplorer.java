@@ -37,7 +37,7 @@ public class ExperimentExplorer extends JInternalFrame{
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
-        super.setSize(200,400);
+        super.setSize(250,500);
         super.setLocation((int)orig.getX(), (int)orig.getY());
         initComponents();
     }
@@ -47,7 +47,7 @@ public class ExperimentExplorer extends JInternalFrame{
         expTreeScrollPane= new javax.swing.JScrollPane();
         
         expTree = new javax.swing.JTree(addNodes(null,new File(expLocation)));
-	expTree.addMouseListener(new TreeMouseListener(expTree));
+	expTree.addMouseListener(new TreeMouseListener(expTree, owner));
         
 	expTreeScrollPane.setViewportView(expTree);
         //this.getContentPane().add(expTreeScrollPane);
