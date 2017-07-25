@@ -36,7 +36,7 @@ import edu.uci.ics.jung.visualization.util.ArrowFactory;
  * A plugin that can create vertices, undirected edges, and directed edges
  * using mouse gestures.
  * 
- * @author Tom Nelson
+ * @author Tom Nelson, modified by dinesh
  *
  */
 public class SfinaEditingGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements

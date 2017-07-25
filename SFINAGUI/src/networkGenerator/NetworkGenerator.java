@@ -85,7 +85,7 @@ public class NetworkGenerator extends JApplet{
         private static ArrayList<String> nodeFields = new ArrayList<String>();
         private static ArrayList<String> linkFields = new ArrayList<String>();
         private static String path = "TopologyFiles/input/";
-        private static final Logger logger = Logger.getLogger(SfinaNetworkGenerator.class);
+        private static final Logger logger = Logger.getLogger(NetworkGenerator.class);
 	Factory<SfinaNode> vertexFactory;
         Factory<SfinaLink> edgeFactory;
         
