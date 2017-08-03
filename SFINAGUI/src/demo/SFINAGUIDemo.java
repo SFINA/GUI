@@ -53,8 +53,9 @@ public class SFINAGUIDemo {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TestCommunicationAgent_TokenGUI e = new TestCommunicationAgent_TokenGUI();
-                new SFINAGUI(e,true).setVisible(true);
+                TestCommunicationAgent_TokenGUI e = 
+                        new TestCommunicationAgent_TokenGUI();
+                new SFINAGUI(e,false).setVisible(true);
             }
         });
     }

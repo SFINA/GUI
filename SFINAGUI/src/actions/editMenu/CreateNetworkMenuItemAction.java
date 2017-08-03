@@ -48,7 +48,7 @@ public class CreateNetworkMenuItemAction  implements ActionListener {
                 return;
             }
         
-            final NetworkGenerator nG = new NetworkGenerator();
+            final NetworkGenerator nG = new NetworkGenerator(owner);
             JInternalFrame iFrame = new NetworkEditor(owner);
             owner.getDesktop().add(iFrame);
             

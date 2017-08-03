@@ -8,6 +8,7 @@
  */
 package networkGenerator;
 
+import core.SFINAGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -77,7 +78,7 @@ import javax.swing.JScrollPane;
  * 
  */
 public class NetworkGenerator extends JApplet{
-
+        SFINAGUI owner;
     /**
 	 * 
 	 */
@@ -107,8 +108,8 @@ public class NetworkGenerator extends JApplet{
      * create a graph.
      * 
      */
-    public NetworkGenerator() {
-        
+    public NetworkGenerator(SFINAGUI owner) {
+        this.owner = owner;
         // create a simple graph for the demo
         graph = new DirectedSparseMultigraph<SfinaNode,SfinaLink>();
 
@@ -173,6 +174,8 @@ public class NetworkGenerator extends JApplet{
                     writeNodeFlow(path);
                     writeLinkTopology(path);
                     writeNodeTopology(path);
+                    owner.resetExperimentExplorer();
+                    //owner.setNetworkEditorVisible(false);
                 }
                 
            } 
@@ -256,7 +259,7 @@ public class NetworkGenerator extends JApplet{
     //===================================== Exporters ======================================        
     //======================================================================================        
     public void writeNodeFlow(String path){
-        String location = path+"/flow/Node.txt";
+        String location = path+"/flow/nodes.txt";
         String columnSeparator = ",";
         try{
             File file = new File(location);
@@ -294,7 +297,7 @@ public class NetworkGenerator extends JApplet{
     }
     
     public void writeLinkFlow(String path){
-        String location = path+"/flow/Link.txt";
+        String location = path+"/flow/links.txt";
         String columnSeparator = ",";
         try{
             File file = new File(location);
@@ -524,6 +527,7 @@ public class NetworkGenerator extends JApplet{
      /**
      * a driver for this demo
      */
+    /*
     @SuppressWarnings("serial")
     public static void main(String[] args) {
         JFrame frame = new JFrame("Sfina Network Generator");
@@ -571,6 +575,6 @@ public class NetworkGenerator extends JApplet{
         }
 
     }
-    
+    */
 }
 // TODO Reformat Topology Loader and Flow Loader and corresponding Exporters

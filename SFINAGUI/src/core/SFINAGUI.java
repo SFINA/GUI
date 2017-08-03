@@ -273,6 +273,10 @@ public class SFINAGUI extends javax.swing.JFrame {
         
     }
     
+    public void resetExperimentExplorer(){
+        initExperimentExplorer();
+    }
+    
     public void initExperimentExplorer(){
         
         experimentExplorer= new ExperimentExplorer(this);
