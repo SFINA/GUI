@@ -118,6 +118,6 @@ public class AddEventsMenuItemAction  implements ActionListener  {
             
         }
         
-        
+        owner.resetExperimentExplorer();
     }
 }

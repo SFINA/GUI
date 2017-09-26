@@ -87,8 +87,7 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
             }
             
         }
-        
-    
+        owner.resetExperimentExplorer();
     }
     
     
