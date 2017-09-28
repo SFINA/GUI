@@ -37,29 +37,36 @@ public class ConfigurationsMenuItemAction implements ActionListener{
     private SFINAGUI owner;
     private HashMap<String, String> map;
     private ParameterEditor editor;
+    private String[] descriptions;
+    
+    private void setDescriptions(){
+        descriptions = new String[6];
+        descriptions[0]= "Number of time steps during which simulation is run, including bootstrap time (integer)";
+        descriptions[1]= "Sequence number of the experiment (string)";
+        descriptions[2]= "Directory where peers log is stored (string)";
+        descriptions[3]= "Total run time in milliseconds per time step of simulation";
+        descriptions[4]= "Number of networks in simulation (integer)";
+        descriptions[5]= "Initial duration in milliseconds during which network files are read (integer)";
+    }
     
     public ConfigurationsMenuItemAction(SFINAGUI owner){
         this.owner = owner;
         map = new HashMap<String, String>();
-        editor = new ParameterEditor(owner.getExperimentConfigurations());
+        setDescriptions();
+        editor = new ParameterEditor(owner.getExperimentConfigurations(), descriptions);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
         Object[] options = {"Save","Cancel"};
-        
         Integer i = JOptionPane.showOptionDialog(owner, editor, "Experiment Configurations",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
-        
         if(i == 0){
             map = editor.getParameters();
             owner.setExperimentConfigurations(map);
         }
-        
     }
     
     public HashMap<String, String> getConfigurations(){
         return map;
     }
-    
 }

@@ -46,39 +46,44 @@ public class ParameterEditor extends JPanel{
     JPanel contentPane;
     JScrollPane scrollPane;
     String columnSeparator="=";
-    
-    public ParameterEditor(HashMap<String, String> pMap){
+    String description[];
+
+    public ParameterEditor(HashMap<String, String> pMap, String[] description){
+        this.description=description;        
         parameters = pMap;
         initComponents();
         populateFields(pMap);
     }
     
-    public ParameterEditor(String file, String columnSeparator){
+    public ParameterEditor(String file, String columnSeparator, String[] description){
+        this.description=description;
         parameters = new HashMap<String,String>();
         initComponents();
         populateFields(file, columnSeparator);
     }
-    
+        
     private void initComponents(){
         pFields = new ArrayList<ParameterField>();
         contentPane = new JPanel();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-        
         scrollPane = new JScrollPane(contentPane);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setPreferredSize(new Dimension(410,250));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
         setLayout(new BorderLayout());
-        
         add(scrollPane, BorderLayout.CENTER);
     }
     
     private void populateFields(HashMap<String, String> pMap){
+        int count = 0;
+        System.out.println(pMap.keySet().size());
+        System.out.println(this.description);
         for(String s:pMap.keySet()){
+            System.out.println(count);
             String key = s;
             String value=pMap.get(s);
-            ParameterField pF = new ParameterField(key);
+            ParameterField pF = new ParameterField(key,description[count]);
+            //pF.setToolTipText(description[count]);
             pF.setValue(value);
             pFields.add(pF);
             contentPane.add(pF);
@@ -87,6 +92,7 @@ public class ParameterEditor extends JPanel{
             scrollPane.repaint();
             revalidate();
             repaint();
+            count++;
         }
     }
     
@@ -98,11 +104,11 @@ public class ParameterEditor extends JPanel{
     
     public HashMap<String,String> getParameters(){
        for(ParameterField pF : pFields){
-           parameters.put(pF.getParameterPair().getKey(),pF.getParameterPair().getValue());
+           parameters.put(pF.getParameterPair().getKey(), pF.getParameterPair().getValue());
        }
        return parameters;
     }
-    
+    /*
     public static void main(String [] args){
         JFrame frame = new JFrame("Text Component");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,4 +117,5 @@ public class ParameterEditor extends JPanel{
         frame.pack();
         frame.setVisible(true);
     }
+    */
 }

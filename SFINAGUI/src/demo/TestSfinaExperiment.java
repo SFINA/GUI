@@ -32,9 +32,9 @@ import protopeer.util.quantities.Time;
  *
  * @author mcb
  */
-public class TestCommunicationAgent_Token extends SimulatedExperiment{
+public class TestSfinaExperiment extends SimulatedExperiment{
     
-    private static final Logger logger = Logger.getLogger(TestCommunicationAgent_Token.class);
+    private static final Logger logger = Logger.getLogger(TestSfinaExperiment.class);
     
    
     private final static String expSeqNum="01";
@@ -48,7 +48,7 @@ public class TestCommunicationAgent_Token extends SimulatedExperiment{
     
     public static void main(String[] args) {
         Experiment.initEnvironment();
-        TestCommunicationAgent_Token test = new TestCommunicationAgent_Token();
+        TestSfinaExperiment test = new TestSfinaExperiment();
         test.init();
         
         PeerFactory peerFactory=new PeerFactory() {

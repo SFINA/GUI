@@ -31,31 +31,44 @@ import javax.swing.JOptionPane;
  * @author dinesh
  */
 public class FileSystemConfigurationMenuItemAction implements ActionListener {
-
     private SFINAGUI owner;
     private HashMap<String, String> map;
     private ParameterEditor editor;
+    private String[] description;
+
+    private void initializeDescriptionList(){
+        description = new String[15];
+        description[0] = "Column separator for SFINA network files";
+        description[1] = "Character to represent missing information in network files";
+        description[2] = "Suffix for directory name to indicate simulation step";
+        description[3] = "Suffix for peer";
+        description[4] = "Directory where peer log is stored";
+        description[5] = "Directory name where input information is stored";
+        description[6] = "Directory name where output information should be stored";
+        description[7] = "Directory where txt files with topology information are stored";
+        description[8] = "Directory where txt files with flow information are stored";    
+        description[9] = "Location where experiment configurations and network informations are stored";        
+        description[10] = "File name of txt file on which events are stored";            
+        description[11] = "File name of txt file on which backend parameters are stored";        
+        description[12] = "File name of txt file on which node information is stored ";        
+        description[13] = "File name of txt file on which link information is stored";        
+        description[14] = "File name of txt file on which information about interdependent networks is stored";          
+    }
+
     public FileSystemConfigurationMenuItemAction(SFINAGUI owner){
         this.owner = owner;
         map = new HashMap<String, String>();
-        editor = new ParameterEditor("conf/fileSystem.conf","=");
+        initializeDescriptionList();
+        editor = new ParameterEditor("conf/fileSystem.conf","=",description);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object[] options = {"Save","Cancel"};
-        
         Integer i = JOptionPane.showOptionDialog(owner, editor, "Experiment Configurations",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
-        
         if(i == 0){
             map = editor.getParameters();
             ParameterWriter pW = new ParameterWriter("=");
             pW.write(map,"conf/fileSystem.conf");
         }
-
-        
     }
-    
-    
-    
 }

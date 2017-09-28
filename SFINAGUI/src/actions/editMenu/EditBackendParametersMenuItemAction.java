@@ -45,13 +45,21 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
 
     private SFINAGUI owner;
     
+    private String descriptions[];
+    
+    private void setDescriptions(){
+        descriptions = new String[2];
+        descriptions[0]="Flow type: AC or DC for power networks (string)";//flowtype;
+        descriptions[1]="Tolerance parameter for links or nodes (double)";//tolerance parameter
+    }
+    
     public EditBackendParametersMenuItemAction(SFINAGUI owner){
         this.owner = owner;
+        setDescriptions();
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        
         // show a dialog box with experimentDirectory:
         String expSeqNum = ((SFINAGUI)owner).getExperimentConfigurations().get("expSeqNum");
         //expSeqNum="01";
@@ -74,9 +82,7 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
         if(cBoxDlg == JOptionPane.YES_OPTION){
             ParameterReader reader = new ParameterReader("=");
             HashMap<String, String> map = reader.readParameters(filePath);
-
-            ParameterEditor editor = new ParameterEditor(map);
-            
+            ParameterEditor editor = new ParameterEditor(map,descriptions);
             Object[] options2 = {"Save","Cancel"};
             int editorChoice=JOptionPane.showOptionDialog(owner, editor,"Edit Events",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options2,options2[0]);
             // if user changed values, update them:
@@ -85,7 +91,6 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
                 ParameterWriter writer = new ParameterWriter("=");
                 writer.write(map,filePath);
             }
-            
         }
         owner.resetExperimentExplorer();
     }

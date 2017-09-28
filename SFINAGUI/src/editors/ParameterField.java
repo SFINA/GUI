@@ -34,25 +34,30 @@ import javax.swing.JTextField;
 public class ParameterField extends JPanel{
     
     JLabel labelField = new JLabel("");
-    
-    //labelField.setPreferredSize(new Dimension(200,30));
-    
     JTextField valueField = new JTextField();
+    String labelTxt;
     
-    public ParameterField(String labelTxt){
+    private String stringToLabel(String txt){
+        txt = txt.replaceAll("(.)([A-Z])", "$1 $2");
+        txt = txt.substring(0,1).toUpperCase()+txt.substring(1);
+        return txt;
+    }
+    
+    public ParameterField(String labelTxt, String toolTip){
         labelField.setMaximumSize(new Dimension(150,30));
         labelField.setPreferredSize(new Dimension(150,30));
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setMaximumSize(new Dimension(400,30));
         this.setPreferredSize(new Dimension(400,30));
-        this.labelField.setText(labelTxt);
-        //this.labelField.setEditable(false);
+        this.labelTxt = labelTxt;
+        this.valueField.setToolTipText(toolTip);
+        this.labelField.setText(stringToLabel(this.labelTxt));
         this.add(labelField);
         this.add(valueField);
     }
     
     public Map.Entry<String,String> getParameterPair(){
-        return new AbstractMap.SimpleEntry<String, String>(labelField.getText(),valueField.getText());
+        return new AbstractMap.SimpleEntry<String, String>(this.labelTxt,valueField.getText());
     }
     
     
@@ -63,7 +68,7 @@ public class ParameterField extends JPanel{
     public static void main(String [] args){
         JFrame frame = new JFrame("Text Component");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ParameterField jp1 = new ParameterField("Label What?1");
+        ParameterField jp1 = new ParameterField("Label What?1","ToolTip");
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
         frame.getContentPane().add(jp1);
         frame.pack();
