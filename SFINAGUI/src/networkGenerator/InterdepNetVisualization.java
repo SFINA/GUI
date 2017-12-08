@@ -204,6 +204,14 @@ public class InterdepNetVisualization extends JApplet{
     
     public void colorLayout(AggregateLayout<ExtendedNode, ExtendedLink> layout){
         for(ExtendedNode v: layout.getGraph().getVertices()){
+            
+            
+            if(v.getNode().isActivated()){
+                vertexPaints.put(v,slack);
+            } else {
+                vertexPaints.put(v,bus);
+            }
+            /*
             PowerNodeType t = (PowerNodeType)v.getNode().getProperty(PowerNodeState.TYPE);
             if(t==PowerNodeType.SLACK_BUS){
                 vertexPaints.put(v,slack);
@@ -212,6 +220,8 @@ public class InterdepNetVisualization extends JApplet{
             } else {
                 vertexPaints.put(v,bus);
             }
+            */
+            
             }
         for(ExtendedLink t:vv.getGraphLayout().getGraph().getEdges()){
             if (t.getLink().isActivated()){
