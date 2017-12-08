@@ -56,15 +56,18 @@ public class TreeMouseListener extends MouseAdapter{
         public void mousePressed(MouseEvent e) {
             int selRow = tree.getRowForLocation(e.getX(), e.getY());
             TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+            
             if(selRow != -1) {
                 
                 if(e.getClickCount() == 2) {
                     String filePath = "";
-                    for(int i =0;i<selPath.getPathCount()-1;i++){
+                    for(int i =0; i<selPath.getPathCount()-1; i++){
                         filePath = filePath+selPath.getPathComponent(i)+"/";
                     }
                     filePath += selPath.getPathComponent(selPath.getPathCount()-1);
-                    
+                    if (!filePath.contains(".txt")){
+                        return;
+                    }
                     // check the type of file, and open similar editor, viewer:
                     String columnSeperator = "=";
                     

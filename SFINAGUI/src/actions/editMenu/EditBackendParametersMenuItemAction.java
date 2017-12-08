@@ -41,7 +41,7 @@ import javax.swing.JOptionPane;
  *
  * @author dinesh
  */
-public class EditBackendParametersMenuItemAction  implements ActionListener {
+public class EditBackendParametersMenuItemAction implements ActionListener {
 
     private SFINAGUI owner;
     
@@ -60,9 +60,7 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        // show a dialog box with experimentDirectory:
         String expSeqNum = ((SFINAGUI)owner).getExperimentConfigurations().get("expSeqNum");
-        //expSeqNum="01";
         File expFolder = new File("experiments/experiment-"+expSeqNum);
         String[] peers=expFolder.list(new FilenameFilter(){
             @Override
@@ -70,14 +68,14 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
                 return new File(file, name).isDirectory();
             }
         });
-        SelectPeerComboBoxDialog dlg = new SelectPeerComboBoxDialog();
+        SelectItemComboBoxDialog dlg = new SelectItemComboBoxDialog();
         dlg.setComboBoxItems(peers);
         Object[] options1 = {"OK","Cancel"};
         int cBoxDlg = JOptionPane.showOptionDialog(owner, dlg,"Select Peerlet",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
         
         ParameterReader pr = new ParameterReader("=");
         HashMap<String,String> parameters=pr.readParameters("conf/fileSystem.conf");
-        String filePath = parameters.get("configurationFilesLocation")+"experiment-"+expSeqNum+"/"+dlg.getSelectedPeer()+"/"+parameters.get("inputDirectoryName")+parameters.get("backendParamFileName");
+        String filePath = parameters.get("configurationFilesLocation")+"experiment-"+expSeqNum+"/"+dlg.getSelectedItem()+"/"+parameters.get("inputDirectoryName")+parameters.get("backendParamFileName");
         
         if(cBoxDlg == JOptionPane.YES_OPTION){
             ParameterReader reader = new ParameterReader("=");
@@ -94,6 +92,4 @@ public class EditBackendParametersMenuItemAction  implements ActionListener {
         }
         owner.resetExperimentExplorer();
     }
-    
-    
 }

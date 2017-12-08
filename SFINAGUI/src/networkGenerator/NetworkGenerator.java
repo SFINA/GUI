@@ -8,6 +8,7 @@
  */
 package networkGenerator;
 
+import com.google.common.base.Function;
 import core.SFINAGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -118,12 +119,10 @@ public class NetworkGenerator extends JApplet{
         
         vv =  new VisualizationViewer<SfinaNode,SfinaLink>(layout);
         vv.setBackground(Color.white);
-
-        vv.getRenderContext().setVertexLabelTransformer(MapTransformer.<SfinaNode,String>getInstance(
-        		LazyMap.<SfinaNode,String>decorate(new HashMap<SfinaNode,String>(), new ToStringLabeller<SfinaNode>())));
+        Function<Object, String> labeller = new ToStringLabeller();
+        vv.getRenderContext().setVertexLabelTransformer(labeller);
         
-        vv.getRenderContext().setEdgeLabelTransformer(MapTransformer.<SfinaLink,String>getInstance(
-        		LazyMap.<SfinaLink,String>decorate(new HashMap<SfinaLink,String>(), new ToStringLabeller<SfinaLink>())));
+        vv.getRenderContext().setEdgeLabelTransformer(labeller);
 
         vv.setVertexToolTipTransformer(vv.getRenderContext().getVertexLabelTransformer());
 

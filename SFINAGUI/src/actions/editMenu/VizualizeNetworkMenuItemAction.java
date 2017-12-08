@@ -31,55 +31,35 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import networkGenerator.FieldsDialog;
+import networkGenerator.InterdepNetVisualization;
 import networkGenerator.NetworkGenerator;
 
 /**
  *
  * @author dinesh
  */
-public class EditNetworkMenuItemAction  implements ActionListener {
+public class VizualizeNetworkMenuItemAction  implements ActionListener {
 
     private SFINAGUI owner;
     
-    public EditNetworkMenuItemAction(SFINAGUI owner){
+    public VizualizeNetworkMenuItemAction(SFINAGUI owner){
         this.owner = owner;
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-            if(owner.isInterDep()){
-                JOptionPane.showMessageDialog(owner, "Network Editing Feature is no implemented for Interdependent Networks!","Unsupported Feature!", JOptionPane.PLAIN_MESSAGE);
+            if(!owner.isInterDep()){
+                JOptionPane.showMessageDialog(owner, "Use Edit Network to view networks that are not interdependent.","Unsupported Feature!", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
             
-            final NetworkGenerator nG = new NetworkGenerator(owner);
+            final InterdepNetVisualization nV = new InterdepNetVisualization(owner);
             JInternalFrame iFrame = new NetworkEditor(owner);
             owner.getDesktop().add(iFrame);
             
-            iFrame.add(nG);
+            iFrame.add(nV);
             iFrame.setVisible(true);
             
             
-            JFileChooser chooser = new JFileChooser(); 
-            chooser.setCurrentDirectory(new java.io.File("."));
-            chooser.setDialogTitle("Select Network Location");
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            chooser.setAcceptAllFileFilterUsed(false);
-            
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
-                String path=  chooser.getSelectedFile().getAbsolutePath();
-                CheckNetworkFiles check = new CheckNetworkFiles(path);
-                if(!check.checkAll()){
-                    JOptionPane.showMessageDialog(owner, "The specified folder does not contain necessary files.\n Make sure the path contains node and link files for both flow and topology!","Invalid Directory!", JOptionPane.PLAIN_MESSAGE);
-                    iFrame.setVisible(false);
-                    return;
-                }
-                
-                nG.loadNodeFlow(path);
-                HashMap<Integer, Pair<Integer>> map = nG.loadLinkTopology(path);
-                nG.loadLinkFlow(path,map);
-                
-                nG.getVisualizationViewer().repaint();
-            }       
     }    
 }

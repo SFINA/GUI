@@ -15,19 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package actions.editMenu;
+package interdep;
 
 /**
  *
  * @author dinesh
  */
-public class SelectPeerComboBoxDialog extends javax.swing.JPanel {
+public class SelectItemComboBoxDialog extends javax.swing.JPanel {
 
     /**
      * Creates new form SelectPeerComboBoxDialog
      */
-    public SelectPeerComboBoxDialog() {
+    public SelectItemComboBoxDialog(String msg) {
         initComponents();
+        jLabel1.setText(msg);
     }
     
     public void setComboBoxItems(String[] peersList){
@@ -41,7 +42,7 @@ public class SelectPeerComboBoxDialog extends javax.swing.JPanel {
         peerListComboBox.addItem(peer);
     }
     
-    public String getSelectedPeer(){
+    public String getSelectedItem(){
         return (String)peerListComboBox.getSelectedItem();
     }
     

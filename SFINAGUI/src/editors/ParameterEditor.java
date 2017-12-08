@@ -76,10 +76,10 @@ public class ParameterEditor extends JPanel{
     
     private void populateFields(HashMap<String, String> pMap){
         int count = 0;
-        System.out.println(pMap.keySet().size());
-        System.out.println(this.description);
+        //System.out.println(pMap.keySet().size());
+        //System.out.println(this.description);
         for(String s:pMap.keySet()){
-            System.out.println(count);
+            //System.out.println(count);
             String key = s;
             String value=pMap.get(s);
             ParameterField pF = new ParameterField(key,description[count]);

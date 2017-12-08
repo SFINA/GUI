@@ -65,14 +65,14 @@ public class AddEventsMenuItemAction  implements ActionListener  {
                 return new File(file, name).isDirectory();
             }
         });
-        SelectPeerComboBoxDialog dlg = new SelectPeerComboBoxDialog();
+        SelectItemComboBoxDialog dlg = new SelectItemComboBoxDialog();
         dlg.setComboBoxItems(peers);
         
         Object[] options1 = {"OK","Cancel"};
         
         int cBoxDlg = JOptionPane.showOptionDialog(owner, dlg,"Select Peerlet",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
         
-        String filePath = parameters.get("configurationFilesLocation")+"experiment-"+expSeqNum+"/"+dlg.getSelectedPeer()+"/"+parameters.get("inputDirectoryName")+parameters.get("eventsFileName");
+        String filePath = parameters.get("configurationFilesLocation")+"experiment-"+expSeqNum+"/"+dlg.getSelectedItem()+"/"+parameters.get("inputDirectoryName")+parameters.get("eventsFileName");
         
         if(cBoxDlg == JOptionPane.YES_OPTION){
             EventsEditor editor = new EventsEditor();

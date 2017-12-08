@@ -55,7 +55,7 @@ public class SFINAGUIDemo {
             public void run() {
                 TestSFINAGUIExperiment e = 
                         new TestSFINAGUIExperiment();
-                new SFINAGUI(e,false).setVisible(true);
+                new SFINAGUI(e,true).setVisible(true);
             }
         });
     }

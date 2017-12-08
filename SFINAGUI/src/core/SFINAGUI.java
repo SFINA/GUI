@@ -23,6 +23,7 @@ import actions.editMenu.CreateNetworkMenuItemAction;
 import actions.editMenu.EditBackendParametersMenuItemAction;
 import actions.editMenu.AddEventsMenuItemAction;
 import actions.editMenu.EditNetworkMenuItemAction;
+import actions.editMenu.VizualizeNetworkMenuItemAction;
 
 import actions.fileMenu.ExitMenuItemAction;
 import actions.fileMenu.FileSystemConfigurationMenuItemAction;
@@ -67,6 +68,7 @@ public class SFINAGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem editEventsMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editNetworkMenuItem;
+    private javax.swing.JMenuItem vizualizeNetworkMenuItem;
     
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu experimentMenu;
@@ -140,7 +142,7 @@ public class SFINAGUI extends javax.swing.JFrame {
         createNetworkMenuItem = new javax.swing.JMenuItem("Create Network");
         editNetworkMenuItem = new javax.swing.JMenuItem("Edit Network");
         editEventsMenuItem = new javax.swing.JMenuItem("Add Events");
-        
+        vizualizeNetworkMenuItem = new javax.swing.JMenuItem("Vizualize Network");
         editBackendParametersMenuItem = new javax.swing.JMenuItem("Edit Backend Parameters");
         experimentMenu = new javax.swing.JMenu("Experiment");
         runMenuItem = new javax.swing.JMenuItem("Run");
@@ -161,7 +163,7 @@ public class SFINAGUI extends javax.swing.JFrame {
         editNetworkMenuItem.addActionListener(new EditNetworkMenuItemAction(this));
         editBackendParametersMenuItem.addActionListener(new EditBackendParametersMenuItemAction(this));
         editEventsMenuItem.addActionListener(new AddEventsMenuItemAction(this));
-        
+        vizualizeNetworkMenuItem.addActionListener(new VizualizeNetworkMenuItemAction(this));
 
        // Experiment Menu Items
         runMenuItem.addActionListener(new RunMenuItemAction(this));
@@ -175,7 +177,9 @@ public class SFINAGUI extends javax.swing.JFrame {
         fileMenu.add(fileSystemConfigurationMenuItem);
         fileMenu.add(exitMenuItem);
         menuBar.add(fileMenu);
-
+        if(interDep){
+            editMenu.add(vizualizeNetworkMenuItem);
+        }
         editMenu.add(createNetworkMenuItem);
         editMenu.add(editNetworkMenuItem);
         editMenu.add(editEventsMenuItem);
