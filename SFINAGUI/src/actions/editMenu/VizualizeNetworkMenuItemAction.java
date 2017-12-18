@@ -24,8 +24,10 @@ import internalFrames.NetworkEditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -33,6 +35,7 @@ import javax.swing.JOptionPane;
 import networkGenerator.FieldsDialog;
 import networkGenerator.InterdepNetVisualization;
 import networkGenerator.NetworkGenerator;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -52,11 +55,14 @@ public class VizualizeNetworkMenuItemAction  implements ActionListener {
                 JOptionPane.showMessageDialog(owner, "Use Edit Network to view networks that are not interdependent.","Unsupported Feature!", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
-            
             final InterdepNetVisualization nV = new InterdepNetVisualization(owner);
             JInternalFrame iFrame = new NetworkEditor(owner);
             owner.getDesktop().add(iFrame);
-            
+            try {
+                iFrame.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(NetworkEditor.class.getName()).log(null, null, ex);
+            }
             iFrame.add(nV);
             iFrame.setVisible(true);
             

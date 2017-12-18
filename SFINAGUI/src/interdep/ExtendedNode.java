@@ -38,6 +38,9 @@ public class ExtendedNode {
         }
         return false;
     }
-        
+    @Override
+    public String toString(){
+        return no.getIndex();
+    }        
         
     }

@@ -21,6 +21,8 @@ import core.SFINAGUI;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
@@ -36,6 +38,11 @@ public class NetworkEditor extends JInternalFrame {
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
+//        try {
+//            super.setMaximum(true);
+//        } catch (PropertyVetoException ex) {
+//            Logger.getLogger(NetworkEditor.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         super.setSize(450,400);
         //super.setLocation((int)(orig.getX()+dim.getWidth()*5/9), (int)(orig.getY()+10));
         //super.setLocation(0,0);

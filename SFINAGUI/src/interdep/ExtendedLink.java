@@ -37,5 +37,9 @@ import network.LinkInterface;
             }
             return false;
         }
+        @Override
+        public String toString(){
+            return l.getIndex();
+        }
     }    
 

@@ -26,6 +26,7 @@ import edu.uci.ics.jung.visualization.util.ArrowFactory;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import interdep.ExtendedLink;
 import interdep.ExtendedNode;
 import interdep.GridVizLayout;
@@ -99,9 +100,11 @@ public class InterdepNetVisualization extends JApplet{
         graph = sn2j.createJungGraph(fn);
         
         final AggregateLayout<ExtendedNode, ExtendedLink> layout = new AggregateLayout<ExtendedNode, ExtendedLink>(new FRLayout<ExtendedNode, ExtendedLink>(graph));
-        
         vv = new VisualizationViewer<ExtendedNode, ExtendedLink>(layout);
         vv.setBackground(Color.white);
+        Function<Object, String> labeller = new ToStringLabeller();
+        vv.getRenderContext().setVertexLabelTransformer(labeller);
+        vv.getRenderContext().setEdgeLabelTransformer(labeller);
         vv.getRenderContext().setVertexFillPaintTransformer(vertexPaints);
         vv.getRenderContext().setVertexDrawPaintTransformer(new Function<ExtendedNode,Paint>() {
                 public Paint apply(ExtendedNode v) {
@@ -145,16 +148,45 @@ public class InterdepNetVisualization extends JApplet{
             }
         });
         
+        JButton no_label = new JButton("No Label");
+        no_label.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                class labeller_new implements Function<Object, String>{
+                    @Override
+                    public String apply(Object input) {
+                        return "";
+                    }
+                }
+                vv.getRenderContext().setVertexLabelTransformer(new labeller_new());
+                vv.getRenderContext().setEdgeLabelTransformer(new labeller_new());                
+                vv.repaint();
+            }
+        });
+        JButton label = new JButton("Label");
+        label.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Function<Object, String> labeller = new ToStringLabeller();
+                vv.getRenderContext().setVertexLabelTransformer(labeller);
+                vv.getRenderContext().setEdgeLabelTransformer(labeller);
+                vv.repaint();
+            }
+        });
+        
         JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         Container content = getContentPane();
         content.add(new GraphZoomScrollPane(vv));
         layoutCircle.setAlignmentX(Component.LEFT_ALIGNMENT);
         buttons.add(layoutCircle);
+        buttons.add(no_label);
+        buttons.add(label);
         layoutCircle.setAlignmentX(Component.LEFT_ALIGNMENT);
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.add(buttons);
+        
         //p.add(new DrawToolBox());
         content.add(p, BorderLayout.SOUTH);
     }
@@ -186,7 +218,10 @@ public class InterdepNetVisualization extends JApplet{
         vv.repaint();
     }
 
-
+    public void layout(){
+        arrangeLayoutCircle((AggregateLayout<ExtendedNode, ExtendedLink>) vv.getLayout(), 3);
+    }
+    
     public void arrangeLayoutSingle(AggregateLayout<ExtendedNode, ExtendedLink> layout){
         int h = this.getSize().height;
         int w = this.getSize().width;
@@ -259,5 +294,6 @@ public class InterdepNetVisualization extends JApplet{
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.pack();
         jf.setVisible(true);
+        tal.layout();
     }
 }
