@@ -40,6 +40,7 @@ import network.LinkInterface;
         @Override
         public String toString(){
             return l.getIndex();
+            //return l.getFlow();
         }
     }    
 

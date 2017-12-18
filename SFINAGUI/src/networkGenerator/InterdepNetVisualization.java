@@ -54,6 +54,7 @@ import javax.swing.SwingConstants;
 import interdep.SfinaNetworkReader;
 import interdep.FlowNetGraphConverter;
 import static java.lang.Math.min;
+import java.util.Comparator;
 import java.util.Vector;
 import network.FlowNetwork;
 import power.input.PowerNodeState;
@@ -118,15 +119,18 @@ public class InterdepNetVisualization extends JApplet{
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgePaints);
         vv.getRenderContext().setEdgeStrokeTransformer(new Function<ExtendedLink, Stroke>(){
            float dash[] = {10.f};
-           protected final Stroke DASH = new BasicStroke(4.f, BasicStroke.CAP_BUTT,
- BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
-           protected final Stroke THICK = new BasicStroke((float)1.5);
+           //protected final Stroke DASH = new BasicStroke(1.f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+           //protected final Stroke THICK = new BasicStroke((float)1.);
             public Stroke apply(ExtendedLink e){
+               //float flow = (float)e.getLink().getFlow();
+               //float capacity = (float)e.getLink().getCapacity();
+               //float thickness = 3.f*(flow/capacity);
                boolean inter = e.getLink().isInterdependent();
                if(inter)
-                   return DASH;
+                   return new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+ BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
                else 
-                   return THICK;
+                   return new BasicStroke(1.0f);
            }
         });
         
@@ -207,12 +211,27 @@ public class InterdepNetVisualization extends JApplet{
             g_array.get((int)(t.getNetwork())).addVertex(t);
         }
         
+        class comparator implements Comparator<ExtendedNode>{
+
+            @Override
+            public int compare(ExtendedNode o1, ExtendedNode o2) {
+                if (Integer.parseInt(o1.getNode().getIndex()) < Integer.parseInt(o2.getNode().getIndex())){
+                    return 1;
+                } else if(Integer.parseInt(o1.getNode().getIndex())==Integer.parseInt(o2.getNode().getIndex())){
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        
         for (int i = 0; i < totalNetworks; i++){
-            Layout<ExtendedNode, ExtendedLink> l = new CircleLayout<ExtendedNode, ExtendedLink>(g_array.get(i));
+            CircleLayout<ExtendedNode, ExtendedLink> l = new CircleLayout<ExtendedNode, ExtendedLink>(g_array.get(i));
             Dimension d = ((rl.getElements()).get(i)).getSize();
             Point2D corner = ((rl.getElements()).get(i)).getLocation();
             Point2D center = new Point2D.Double(corner.getX()+d.width/2+40, corner.getY()+d.height/2-40);
             l.setSize(d);
+            l.setVertexOrder(new comparator());
             layout.put(l, center);
         }
         vv.repaint();
