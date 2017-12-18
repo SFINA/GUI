@@ -118,7 +118,7 @@ public class InterdepNetVisualization extends JApplet{
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgePaints);
         vv.getRenderContext().setEdgeStrokeTransformer(new Function<ExtendedLink, Stroke>(){
            float dash[] = {10.f};
-           protected final Stroke DASH = new BasicStroke(1.5f, BasicStroke.CAP_BUTT,
+           protected final Stroke DASH = new BasicStroke(4.f, BasicStroke.CAP_BUTT,
  BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
            protected final Stroke THICK = new BasicStroke((float)1.5);
             public Stroke apply(ExtendedLink e){
@@ -218,9 +218,9 @@ public class InterdepNetVisualization extends JApplet{
         vv.repaint();
     }
 
-    public void layout(){
-        arrangeLayoutCircle((AggregateLayout<ExtendedNode, ExtendedLink>) vv.getLayout(), 3);
-    }
+//    public void layout(){
+//        arrangeLayoutCircle((AggregateLayout<ExtendedNode, ExtendedLink>) vv.getLayout(), 3);
+//    }
     
     public void arrangeLayoutSingle(AggregateLayout<ExtendedNode, ExtendedLink> layout){
         int h = this.getSize().height;
@@ -294,6 +294,6 @@ public class InterdepNetVisualization extends JApplet{
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.pack();
         jf.setVisible(true);
-        tal.layout();
+        //tal.layout();
     }
 }
