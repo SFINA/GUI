@@ -53,10 +53,13 @@ import javax.swing.SwingConstants;
 
 import interdep.SfinaNetworkReader;
 import interdep.FlowNetGraphConverter;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 import java.util.Comparator;
 import java.util.Vector;
 import network.FlowNetwork;
+import network.Link;
+import power.input.PowerLinkState;
 import power.input.PowerNodeState;
 import power.input.PowerNodeType;
 /*
@@ -86,6 +89,8 @@ public class InterdepNetVisualization extends JApplet{
     public final Color inActiveLink = new Color(181, 5, 11);
     public final Color interdepVertexColor =new Color(255, 255, 0);
     private SFINAGUI owner;
+    private double maxPower = 0.;
+    private double minPower = 10000.;
     public InterdepNetVisualization(SFINAGUI owner){
        this.start();
        this.owner = owner;
@@ -99,7 +104,12 @@ public class InterdepNetVisualization extends JApplet{
         Vector<FlowNetwork> fn = snr.readNetworks();
         int totalNetworks = fn.size();
         graph = sn2j.createJungGraph(fn);
-        
+        for(ExtendedLink l:graph.getEdges()){
+            if (!(l.getLink()).isInterdependent()){
+                maxPower = max(maxPower, (double)((Link)(l.getLink())).getProperty(PowerLinkState.CURRENT));
+                minPower = min(minPower, (double)((Link)(l.getLink())).getProperty(PowerLinkState.CURRENT));
+            }
+        }
         final AggregateLayout<ExtendedNode, ExtendedLink> layout = new AggregateLayout<ExtendedNode, ExtendedLink>(new FRLayout<ExtendedNode, ExtendedLink>(graph));
         vv = new VisualizationViewer<ExtendedNode, ExtendedLink>(layout);
         vv.setBackground(Color.white);
@@ -122,15 +132,23 @@ public class InterdepNetVisualization extends JApplet{
            //protected final Stroke DASH = new BasicStroke(1.f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
            //protected final Stroke THICK = new BasicStroke((float)1.);
             public Stroke apply(ExtendedLink e){
-               //float flow = (float)e.getLink().getFlow();
-               //float capacity = (float)e.getLink().getCapacity();
-               //float thickness = 3.f*(flow/capacity);
+               
                boolean inter = e.getLink().isInterdependent();
                if(inter)
                    return new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
  BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
-               else 
-                   return new BasicStroke(1.0f);
+               else {
+                   double cur = (double)((Link)(e.getLink())).getProperty(PowerLinkState.CURRENT);
+                   System.out.println(maxPower);
+                   System.out.println(minPower);
+                   // uses log scale
+                   double strokeSize = 5.* Math.log(1+(cur-minPower)/(maxPower-minPower));
+                   // uses linear scale
+                   //double strokeSize = 5.* ((cur-minPower)/(maxPower-minPower));
+                   // uses exponential ecale
+                   //double strokeSize = Math.exp((cur-minPower)/(maxPower-minPower));
+                   return new BasicStroke((float)strokeSize);
+               }
            }
         });
         
@@ -283,7 +301,6 @@ public class InterdepNetVisualization extends JApplet{
             } else {
                 edgePaints.put(t, inActiveLink);
             }
-
         }
     }
     
