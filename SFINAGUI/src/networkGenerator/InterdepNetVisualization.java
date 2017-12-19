@@ -139,8 +139,6 @@ public class InterdepNetVisualization extends JApplet{
  BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
                else {
                    double cur = (double)((Link)(e.getLink())).getProperty(PowerLinkState.CURRENT);
-                   System.out.println(maxPower);
-                   System.out.println(minPower);
                    // uses log scale
                    double strokeSize = 5.* Math.log(1+(cur-minPower)/(maxPower-minPower));
                    // uses linear scale
