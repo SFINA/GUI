@@ -33,8 +33,8 @@ import javax.swing.JInternalFrame;
 public class NetworkEditor extends JInternalFrame {
     SFINAGUI owner;
     
-    public NetworkEditor(SFINAGUI owner){
-        super("Network Viewer",true,true,true,true);
+    public NetworkEditor(SFINAGUI owner, String title){
+        super(title,true,true,true,true);
         this.owner = owner;
         Point orig = owner.getLocation();
         Dimension dim = owner.getContentPane().getSize();
@@ -43,7 +43,7 @@ public class NetworkEditor extends JInternalFrame {
 //        } catch (PropertyVetoException ex) {
 //            Logger.getLogger(NetworkEditor.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-        super.setSize(450,400);
+        super.setSize(650,500);
         //super.setLocation((int)(orig.getX()+dim.getWidth()*5/9), (int)(orig.getY()+10));
         //super.setLocation(0,0);
     }

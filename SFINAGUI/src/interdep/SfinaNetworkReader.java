@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.JFileChooser;
@@ -36,7 +38,7 @@ public class SfinaNetworkReader {
         String path="networkFileLocation";
         JFileChooser chooser = new JFileChooser(); 
         chooser.setCurrentDirectory(new java.io.File("."));
-        chooser.setDialogTitle("Select Location of Peers");
+        chooser.setDialogTitle("Select Experiment Location.");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) { 
@@ -48,19 +50,26 @@ public class SfinaNetworkReader {
                     return new File(file, name).isDirectory();
                 }
             });
+            Arrays.sort(peers,Collections.reverseOrder());
+            // return null if does not contain peers
+            if(!peers[0].contains("peer")){
+                JOptionPane.showMessageDialog(null, "The selected directory does not contain peers.\n Please select suitable directory.");
+                return null;
+            }
             
-            SelectItemComboBoxDialog dlg_peers = new SelectItemComboBoxDialog("Select any one peer to explore networks. For interdependent networks, all peers will be considered.");
-            dlg_peers.setComboBoxItems(peers);
+            //SelectItemComboBoxDialog dlg_peers = new SelectItemComboBoxDialog("Select any one peer to explore networks. For interdependent networks, all peers will be considered.");
+            //dlg_peers.setComboBoxItems(peers);
             Object[] options1 = {"OK","Cancel"};
-            int cBoxDlg = JOptionPane.showOptionDialog(null, dlg_peers,"Select Peers",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
+            //int cBoxDlg = JOptionPane.showOptionDialog(null, dlg_peers,"Select Peers",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
             
-            if(cBoxDlg == JOptionPane.YES_OPTION){
+            //if(cBoxDlg == JOptionPane.YES_OPTION){
                 String[] outputs=new File(path + File.separatorChar+peers[0]).list(new FilenameFilter(){
                     @Override
                     public boolean accept(File file, String name){
                         return new File(file, name).isDirectory();
                     }
                 });
+                Arrays.sort(outputs,Collections.reverseOrder());
                 SelectItemComboBoxDialog dlg_outputs = new SelectItemComboBoxDialog("Select whether you want to vizualize inputs or outputs");
                 dlg_outputs.setComboBoxItems(outputs);
                 
@@ -72,6 +81,7 @@ public class SfinaNetworkReader {
                             return new File(file, name).isDirectory();
                         }
                     });
+                    Arrays.sort(times,Collections.reverseOrder());
                     SelectItemComboBoxDialog dlg_times = new SelectItemComboBoxDialog("Select the time step whose network you want to vizualize.");
                     dlg_times.setComboBoxItems(times);
                     
@@ -86,6 +96,7 @@ public class SfinaNetworkReader {
                                 return new File(file, name).isDirectory();
                             }
                             });
+                            Arrays.sort(iters,Collections.reverseOrder());
                             SelectItemComboBoxDialog dlg_iters = new SelectItemComboBoxDialog("Select the iteration to visualize.");
                             dlg_iters.setComboBoxItems(iters);
                             int cBoxDlg_iters = JOptionPane.showOptionDialog(null, dlg_iters,"Select Iteration Step",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,options1,options1[0]);
@@ -103,15 +114,20 @@ public class SfinaNetworkReader {
                                     String output = dlg_outputs.getSelectedItem();
                                     String iteration = dlg_iters.getSelectedItem();
                                     String net_location = path+fSep+peerPath+fSep+output+fSep+time+fSep+iteration;
+                                    //System.out.println(net_location);
                                     topologyLoader.loadNodes(net_location+"/topology/nodes.txt");
                                     topologyLoader.loadLinks(net_location+"/topology/links.txt");
                                     if (peerPath.contains("peer-0")){
+                                        
                                         topologyLoader.loadLinks(net_location+"/topology/interLinks.txt");
                                     }
                                     flowLoader.loadNodeFlowData(net_location+"/flow/nodes.txt");
                                     flowLoader.loadLinkFlowData(net_location+"/flow/links.txt");
                                     if (peerPath.contains("peer-0")){
-                                        flowLoader.loadInterdependentLinkFlowData(net_location+"/flow/interLinks.txt");
+                                        File f = new File(net_location+"/flow/interLinks.txt");
+                                        if(f.exists() && !f.isDirectory()) {
+                                            flowLoader.loadInterdependentLinkFlowData(net_location+"/flow/interLinks.txt");
+                                        }
                                     }
 
                                     fN.add(networkIndex,n);
@@ -132,6 +148,7 @@ public class SfinaNetworkReader {
                                 String time = dlg_times.getSelectedItem();
                                 String output = dlg_outputs.getSelectedItem();
                                 String net_location = path+fSep+peerPath+fSep+output+fSep+time;
+                                
                                 topologyLoader.loadNodes(net_location+"/topology/nodes.txt");
                                 topologyLoader.loadLinks(net_location+"/topology/links.txt");
                                 if (peerPath.contains("peer-0")){
@@ -140,18 +157,18 @@ public class SfinaNetworkReader {
                                 flowLoader.loadNodeFlowData(net_location+"/flow/nodes.txt");
                                 flowLoader.loadLinkFlowData(net_location+"/flow/links.txt");
                                 if (peerPath.contains("peer-0")){
-                                    flowLoader.loadInterdependentLinkFlowData(net_location+"/flow/interLinks.txt");
+                                        File f = new File(net_location+"/flow/interLinks.txt");
+                                        if(f.exists() && !f.isDirectory()) {
+                                            flowLoader.loadInterdependentLinkFlowData(net_location+"/flow/interLinks.txt");
+                                        }
                                 }
                                 fN.add(networkIndex,n);
                             }
                             return fN;
                         }
                     }
-                }
             }
         }
-        JOptionPane.showMessageDialog(null, "Eggs are not supposed to be green.");
-        System.exit(0);
         return null;
     }
         

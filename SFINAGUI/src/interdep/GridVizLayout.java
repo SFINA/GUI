@@ -30,7 +30,7 @@ public class GridVizLayout extends InterdepVizLayout{
         if(finalAdditionalRow>0){
             gridsPerRow.add(finalAdditionalRow);            
         }
-        //System.out.println(gridsPerRow);
+        System.out.println(gridsPerRow);
         gridElements = new Vector(n);
         for(int i = 0; i < gridsPerRow.size()-1; i++){
             for(int j = 0; j < gridsPerRow.get(i); j++){
@@ -46,9 +46,14 @@ public class GridVizLayout extends InterdepVizLayout{
         for(int j = 0; j < gridsPerRow.get(i); j++){
             int x = j * Xsize/gridsPerRow.get(i);
             int y = i * Ysize/gridsPerRow.size();
-            (gridElements).add(new Rectangle(x, y, (gridElements).get(0).width, (gridElements).get(0).height));
+            if (!gridElements.isEmpty()){
+                (gridElements).add(new Rectangle(x, y, (gridElements).get(0).width, (gridElements).get(0).height));
+            } else {
+                int height = this.Ysize/gridsPerRow.size();
+                int width = Xsize/gridsPerRow.get(i);
+                (gridElements).add(new Rectangle(x, y, width, height));
+            }
         }
-        
     }
     
     public static void main(String args[]){

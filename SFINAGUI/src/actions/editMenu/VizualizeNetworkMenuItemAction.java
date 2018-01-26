@@ -56,16 +56,10 @@ public class VizualizeNetworkMenuItemAction  implements ActionListener {
                 return;
             }
             final InterdepNetVisualization nV = new InterdepNetVisualization(owner);
-            JInternalFrame iFrame = new NetworkEditor(owner);
+            JInternalFrame iFrame = new NetworkEditor(owner, "Network Visualization");
             owner.getDesktop().add(iFrame);
-            try {
-                iFrame.setMaximum(true);
-            } catch (PropertyVetoException ex) {
-                Logger.getLogger(NetworkEditor.class.getName()).log(null, null, ex);
-            }
             iFrame.add(nV);
             iFrame.setVisible(true);
-            
-            
-    }    
+            nV.start();
+    }
 }

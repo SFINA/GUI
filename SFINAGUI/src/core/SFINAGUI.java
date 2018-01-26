@@ -120,6 +120,10 @@ public class SFINAGUI extends javax.swing.JFrame {
         this.interDep = interDep;
         setTitle(this.getClass().getSimpleName());
         initComponents();
+        // make it cover screen
+        //Dimension d = getMaximumSize();
+        this.setSize(new Dimension(1000,900));
+        this.setMinimumSize(new Dimension(1000, 800));
     }
     
     @SuppressWarnings("unchecked")
@@ -297,7 +301,7 @@ public class SFINAGUI extends javax.swing.JFrame {
     
     public void initNetworkEditor(){
         
-        networkEditor= new NetworkEditor(this);
+        networkEditor= new NetworkEditor(this,"");
         analyticsDesktopPane.add(networkEditor);
         networkEditorFrameVisible = true;
         networkEditor.setVisible(networkEditorFrameVisible);

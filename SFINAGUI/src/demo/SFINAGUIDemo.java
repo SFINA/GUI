@@ -53,8 +53,8 @@ public class SFINAGUIDemo {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TestSFINAGUIExperiment e = 
-                        new TestSFINAGUIExperiment();
+                PowerCascadeAgentExp e = 
+                        new PowerCascadeAgentExp();
                 new SFINAGUI(e,true).setVisible(true);
             }
         });

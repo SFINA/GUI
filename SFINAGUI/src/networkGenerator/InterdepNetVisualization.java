@@ -53,10 +53,19 @@ import javax.swing.SwingConstants;
 
 import interdep.SfinaNetworkReader;
 import interdep.FlowNetGraphConverter;
+import java.io.File;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import network.FlowNetwork;
 import network.Link;
 import power.input.PowerLinkState;
@@ -77,7 +86,7 @@ public class InterdepNetVisualization extends JApplet{
     VisualizationViewer<ExtendedNode, ExtendedLink> vv;
     LoadingCache<ExtendedNode, Paint> vertexPaints =
 			CacheBuilder.newBuilder().build(
-					CacheLoader.from(Functions.<Paint>constant(Color.white))); 
+					CacheLoader.from(Functions.<Paint>constant(Color.white)));
     LoadingCache<ExtendedLink, Paint> edgePaints =
 			CacheBuilder.newBuilder().build(
 					CacheLoader.from(Functions.<Paint>constant(Color.blue)));     
@@ -91,18 +100,20 @@ public class InterdepNetVisualization extends JApplet{
     private SFINAGUI owner;
     private double maxPower = 0.;
     private double minPower = 10000.;
+    
     public InterdepNetVisualization(SFINAGUI owner){
-       this.start();
        this.owner = owner;
     }
 
     public void start(){
         Graph<ExtendedNode, ExtendedLink> graph = new SparseMultigraph<ExtendedNode, ExtendedLink>();
-        
         SfinaNetworkReader snr = new SfinaNetworkReader();
         FlowNetGraphConverter sn2j = new FlowNetGraphConverter();
         Vector<FlowNetwork> fn = snr.readNetworks();
-        int totalNetworks = fn.size();
+        if (fn==null){
+            return;
+        }
+        final int totalNetworks = fn.size();
         graph = sn2j.createJungGraph(fn);
         for(ExtendedLink l:graph.getEdges()){
             if (!(l.getLink()).isInterdependent()){
@@ -113,9 +124,6 @@ public class InterdepNetVisualization extends JApplet{
         final AggregateLayout<ExtendedNode, ExtendedLink> layout = new AggregateLayout<ExtendedNode, ExtendedLink>(new FRLayout<ExtendedNode, ExtendedLink>(graph));
         vv = new VisualizationViewer<ExtendedNode, ExtendedLink>(layout);
         vv.setBackground(Color.white);
-        Function<Object, String> labeller = new ToStringLabeller();
-        vv.getRenderContext().setVertexLabelTransformer(labeller);
-        vv.getRenderContext().setEdgeLabelTransformer(labeller);
         vv.getRenderContext().setVertexFillPaintTransformer(vertexPaints);
         vv.getRenderContext().setVertexDrawPaintTransformer(new Function<ExtendedNode,Paint>() {
                 public Paint apply(ExtendedNode v) {
@@ -129,23 +137,14 @@ public class InterdepNetVisualization extends JApplet{
         vv.getRenderContext().setEdgeDrawPaintTransformer(edgePaints);
         vv.getRenderContext().setEdgeStrokeTransformer(new Function<ExtendedLink, Stroke>(){
            float dash[] = {10.f};
-           //protected final Stroke DASH = new BasicStroke(1.f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
-           //protected final Stroke THICK = new BasicStroke((float)1.);
             public Stroke apply(ExtendedLink e){
                
                boolean inter = e.getLink().isInterdependent();
                if(inter)
-                   return new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                   return new BasicStroke(1.5f, BasicStroke.CAP_BUTT,
  BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
                else {
-                   double cur = (double)((Link)(e.getLink())).getProperty(PowerLinkState.CURRENT);
-                   // uses log scale
-                   double strokeSize = 5.* Math.log(1+(cur-minPower)/(maxPower-minPower));
-                   // uses linear scale
-                   //double strokeSize = 5.* ((cur-minPower)/(maxPower-minPower));
-                   // uses exponential ecale
-                   //double strokeSize = Math.exp((cur-minPower)/(maxPower-minPower));
-                   return new BasicStroke((float)strokeSize);
+                   return new BasicStroke((float) 1.5);
                }
            }
         });
@@ -153,68 +152,53 @@ public class InterdepNetVisualization extends JApplet{
         DefaultModalGraphMouse<ExtendedNode, ExtendedLink> gm = new DefaultModalGraphMouse<ExtendedNode, ExtendedLink>();
         vv.setGraphMouse(gm);
         colorLayout(layout);
-        totalNetworks=3;
         arrangeLayoutCircle(layout, totalNetworks);
         vv.validate();
-        arrangeLayoutCircle(layout,totalNetworks);
         vv.repaint();
                 
-        JButton layoutCircle = new JButton("Layout Circle");
-        layoutCircle.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                arrangeLayoutCircle(layout,3);
-                vv.repaint();
-            }
-        });
-        
-        JButton no_label = new JButton("No Label");
-        no_label.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                class labeller_new implements Function<Object, String>{
-                    @Override
-                    public String apply(Object input) {
-                        return "";
-                    }
-                }
-                vv.getRenderContext().setVertexLabelTransformer(new labeller_new());
-                vv.getRenderContext().setEdgeLabelTransformer(new labeller_new());                
-                vv.repaint();
-            }
-        });
-        JButton label = new JButton("Label");
-        label.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Function<Object, String> labeller = new ToStringLabeller();
-                vv.getRenderContext().setVertexLabelTransformer(labeller);
-                vv.getRenderContext().setEdgeLabelTransformer(labeller);
-                vv.repaint();
-            }
-        });
-        
         JPanel buttons = new JPanel();
+        /*JButton saveGraph = new JButton("Save Visible");
+        saveGraph.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser(); 
+                chooser.setCurrentDirectory(new java.io.File("."));
+                chooser.setDialogTitle("Select Location To Save File");
+                chooser.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "svg"));
+                //chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                int option = chooser.showSaveDialog(vv);
+                if(option == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    saveGraphics(file);
+                }
+            }
+        });
+        buttons.add(saveGraph);
+        */
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
         Container content = getContentPane();
         content.add(new GraphZoomScrollPane(vv));
-        layoutCircle.setAlignmentX(Component.LEFT_ALIGNMENT);
-        buttons.add(layoutCircle);
-        buttons.add(no_label);
-        buttons.add(label);
-        layoutCircle.setAlignmentX(Component.LEFT_ALIGNMENT);
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.add(buttons);
-        
-        //p.add(new DrawToolBox());
         content.add(p, BorderLayout.SOUTH);
+        
     }
-
+//        public void saveGraphics(File file){
+//        try{
+//            VectorGraphics g = new SVGGraphics2D(file, vv);
+//            g.startExport();
+//            vv.print(g);
+//            g.endExport();
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }        
+//    }
     public void arrangeLayoutCircle(AggregateLayout<ExtendedNode, ExtendedLink> layout, int totalNetworks){
-        //int totalNetworks = 3;
-        GridVizLayout rl = new GridVizLayout(totalNetworks, this.getSize().height-120, this.getSize().width-120);
-        Vector<Graph<ExtendedNode, ExtendedLink>> g_array = new Vector<Graph<ExtendedNode, ExtendedLink>>(3);
+        int dim = min(this.getSize().height,this.getSize().width) + 100;
+        GridVizLayout rl = new GridVizLayout(totalNetworks, dim, dim);
+        Vector<Graph<ExtendedNode, ExtendedLink>> g_array = new Vector<Graph<ExtendedNode, ExtendedLink>>(totalNetworks);
         Graph<ExtendedNode, ExtendedLink> g = layout.getGraph();
         layout.removeAll();
         
@@ -226,62 +210,25 @@ public class InterdepNetVisualization extends JApplet{
         for (ExtendedNode t : g.getVertices()){
             g_array.get((int)(t.getNetwork())).addVertex(t);
         }
-        
-        class comparator implements Comparator<ExtendedNode>{
-
-            @Override
-            public int compare(ExtendedNode o1, ExtendedNode o2) {
-                if (Integer.parseInt(o1.getNode().getIndex()) < Integer.parseInt(o2.getNode().getIndex())){
-                    return 1;
-                } else if(Integer.parseInt(o1.getNode().getIndex())==Integer.parseInt(o2.getNode().getIndex())){
-                    return 0;
-                } else {
-                    return -1;
-                }
-            }
-        }
-        
         for (int i = 0; i < totalNetworks; i++){
+            Collection<ExtendedNode> c= g_array.get(i).getVertices();
+            List lst = new ArrayList(c);
+            Collections.sort(lst);
             CircleLayout<ExtendedNode, ExtendedLink> l = new CircleLayout<ExtendedNode, ExtendedLink>(g_array.get(i));
+            l.setVertexOrder(lst);
+
             Dimension d = ((rl.getElements()).get(i)).getSize();
             Point2D corner = ((rl.getElements()).get(i)).getLocation();
-            Point2D center = new Point2D.Double(corner.getX()+d.width/2+40, corner.getY()+d.height/2-40);
+            Point2D center = new Point2D.Double(corner.getX()+d.width/2+60, corner.getY()+d.height/2);
             l.setSize(d);
-            l.setVertexOrder(new comparator());
+            
             layout.put(l, center);
         }
-        vv.repaint();
-    }
-
-//    public void layout(){
-//        arrangeLayoutCircle((AggregateLayout<ExtendedNode, ExtendedLink>) vv.getLayout(), 3);
-//    }
-    
-    public void arrangeLayoutSingle(AggregateLayout<ExtendedNode, ExtendedLink> layout){
-        int h = this.getSize().height;
-        int w = this.getSize().width;
-        Point2D center1 = new Point2D.Double(w/2,h/2+50);
-        Dimension d = new Dimension(2*w/3,2*h/3);
-        Graph<ExtendedNode, ExtendedLink> g = layout.getGraph();
-        layout.removeAll();
-        Layout<ExtendedNode,ExtendedLink> sl2 = new FRLayout(g);
-        sl2.setSize(d);
-        layout.put(sl2, center1);
-        ((FRLayout)sl2).step();
-        ((FRLayout)sl2).initialize();
         vv.repaint();
     }
     
     public void colorLayout(AggregateLayout<ExtendedNode, ExtendedLink> layout){
         for(ExtendedNode v: layout.getGraph().getVertices()){
-            
-            
-            if(v.getNode().isActivated()){
-                vertexPaints.put(v,slack);
-            } else {
-                vertexPaints.put(v,bus);
-            }
-            /*
             PowerNodeType t = (PowerNodeType)v.getNode().getProperty(PowerNodeState.TYPE);
             if(t==PowerNodeType.SLACK_BUS){
                 vertexPaints.put(v,slack);
@@ -290,8 +237,6 @@ public class InterdepNetVisualization extends JApplet{
             } else {
                 vertexPaints.put(v,bus);
             }
-            */
-            
             }
         for(ExtendedLink t:vv.getGraphLayout().getGraph().getEdges()){
             if (t.getLink().isActivated()){
@@ -303,7 +248,6 @@ public class InterdepNetVisualization extends JApplet{
     }
     
     public static void main(String[] args){
-        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -322,12 +266,12 @@ public class InterdepNetVisualization extends JApplet{
         }
 
         InterdepNetVisualization tal = new InterdepNetVisualization(null);
-        
+        tal.start();
         JFrame jf = new JFrame();
         jf.getContentPane().add(tal);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.pack();
         jf.setVisible(true);
-        //tal.layout();
+        
     }
 }

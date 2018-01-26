@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 SFINA Team
+ * Copyright (C) 2016 SFINA Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,12 @@
  */
 package demo;
 
-import agents.simulation.SimulationAgent;
+import replayer.BenchmarkLogReplayer;
+import agent.PowerCascadeAgent;
+import agents.communication.InterdependentCommunicationAgent;
 import agents.communication.TokenCommunicationAgent;
 import agents.negotiators.PowerEventNegotiatorAgent;
+import agents.time.TimeSteppingAgent;
 import core.SFINAGUIExperiment;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
@@ -32,46 +35,47 @@ import protopeer.util.quantities.Time;
 
 /**
  *
- * @author mcb, dinesh
+ * @author Ben
  */
-public class TestSFINAGUIExperiment extends SimulatedExperiment implements  SFINAGUIExperiment{
+public class PowerCascadeAgentExp extends SimulatedExperiment  implements  SFINAGUIExperiment{
     
-    private static final Logger logger = Logger.getLogger(TestSFINAGUIExperiment.class);
+    private static final Logger logger = Logger.getLogger(PowerCascadeAgentExp.class);
     
-   
     private static String expSeqNum="01";
     private static String experimentID="experiment-"+expSeqNum;
     private static String peersLogDirectory="peerlets-log/";
     //Simulation Parameters
-    private  static int bootstrapTime=2000;
-    private  static int runTime=1000;
-    private  static int runDuration=6;
-    private  static int N=3;
+    private static int bootstrapTime=2000;
+    private static int runTime=500;
+    private static int runDuration=6;
+    private static int N=2;
     
+    
+    @Override
     public void run() {
+        double relCapacityChange = 1.0;
         Experiment.initEnvironment();
         init();
         PeerFactory peerFactory=new PeerFactory() {
             public Peer createPeer(int peerIndex, Experiment experiment) {
                 Peer newPeer = new Peer(peerIndex);
-                newPeer.addPeerlet(new SimulationAgent(
-                        experimentID));
-                newPeer.addPeerlet(new TokenCommunicationAgent(Time.inMilliseconds(bootstrapTime),
-                        Time.inMilliseconds(runTime),N,0));
-                newPeer.addPeerlet(new InterpssFlowDomainAgent());
+                newPeer.addPeerlet(new PowerCascadeAgent(
+                        experimentID,
+                        relCapacityChange));
+                newPeer.addPeerlet(new InterpssFlowDomainAgent());          
+                newPeer.addPeerlet(new InterdependentCommunicationAgent(
+                        Time.inMilliseconds(bootstrapTime),
+                        Time.inMilliseconds(runTime),2));
                 newPeer.addPeerlet(new PowerEventNegotiatorAgent());
                 return newPeer;
             }
         };
-        //test.initPeers(0,N,peerFactory);
         initPeers(0,N,peerFactory);
-        //test.startPeers(0,N);
         startPeers(0,N);
-        //run the simulation
-        //test.runSimulation(Time.inSeconds(runDuration));
         runSimulation(Time.inSeconds(runDuration));
-       
+        //BenchmarkLogReplayer replayer=new BenchmarkLogReplayer(expSeqNum, 0, 1000, true);        
     }
+ 
     
     public void setExperimentConfigurations(HashMap<String, String> map){
         this.expSeqNum = map.get("expSeqNum");
@@ -93,7 +97,5 @@ public class TestSFINAGUIExperiment extends SimulatedExperiment implements  SFIN
         map.put("N",String.valueOf(this.N));
         return map;
     }
-    
-    
-    
+
 }

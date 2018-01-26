@@ -26,6 +26,7 @@ import network.LinkInterface;
         public Number getNetwork(){
             return network;
         }
+        
         @Override
         public boolean equals(Object o){
             if (this==o){
@@ -37,10 +38,13 @@ import network.LinkInterface;
             }
             return false;
         }
-        @Override
-        public String toString(){
-            return l.getIndex();
-            //return l.getFlow();
-        }
+        
+        
+//        @Override
+//        public String toString(){
+//            return l.getIndex();
+//        }
+        
+        
     }    
 

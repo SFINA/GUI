@@ -48,12 +48,12 @@ public class EditNetworkMenuItemAction  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
             if(owner.isInterDep()){
-                JOptionPane.showMessageDialog(owner, "Network Editing Feature is no implemented for Interdependent Networks!","Unsupported Feature!", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(owner, "Network Editing Feature is not yet implemented for Interdependent Networks!","Unsupported Feature!", JOptionPane.PLAIN_MESSAGE);
                 return;
             }
             
             final NetworkGenerator nG = new NetworkGenerator(owner);
-            JInternalFrame iFrame = new NetworkEditor(owner);
+            JInternalFrame iFrame = new NetworkEditor(owner, "Network Editor");
             owner.getDesktop().add(iFrame);
             
             iFrame.add(nG);

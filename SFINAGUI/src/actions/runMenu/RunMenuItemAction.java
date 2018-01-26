@@ -46,12 +46,8 @@ public class RunMenuItemAction implements ActionListener {
         Thread t = new Thread(){
             @Override
             public void run(){
-                /*
-                owner.notifyStatus(true);
-                exp.run();
-                owner.notifyStatus(false);
-                */
                 owner.runExperiment();
+                
             }
         };
         t.start();

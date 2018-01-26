@@ -12,7 +12,7 @@ import network.Node;
  *
  * @author dinesh
  */
-public class ExtendedNode {
+public class ExtendedNode implements Comparable{
     private Node no;
     private Number network;
     public ExtendedNode(Node no, Number network){
@@ -28,19 +28,8 @@ public class ExtendedNode {
     }
 
     @Override
-    public boolean equals(Object o){
-        if (this==o){
-            return true;
-        }
-        if(o instanceof ExtendedNode){
-            ExtendedNode e = (ExtendedNode)o;
-            return (no.equals(e.getNode()) && network.equals(e.getNetwork())) || (no==null && e.getNode()==null && network==null && e.getNetwork()==null);
-        }
-        return false;
+    public int compareTo(Object o) {
+        return Integer.compare(Integer.parseInt(this.getNode().getIndex()),Integer.parseInt(((ExtendedNode)o).getNode().getIndex()));
     }
-    @Override
-    public String toString(){
-        return no.getIndex();
-    }        
         
-    }
+}

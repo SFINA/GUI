@@ -100,9 +100,9 @@ public class TreeMouseListener extends MouseAdapter{
                     pop = new JPopupMenu();
                     run = new JMenuItem("Run Experiment");
                     run.addActionListener(new RunMenuItemAction(owner));
-                    JMenuItem view = new JMenuItem("Vizualize");
-                    view.addActionListener(new VizualizeNetworkMenuItemAction(owner));
-                    pop.add(view);
+                    //JMenuItem view = new JMenuItem("Vizualize");
+                    //view.addActionListener(new VizualizeNetworkMenuItemAction(owner));
+                    //pop.add(view);
                     pop.add(run);
                     
                     pop.show(e.getComponent(), e.getX(), e.getY());

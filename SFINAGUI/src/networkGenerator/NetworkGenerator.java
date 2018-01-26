@@ -174,7 +174,6 @@ public class NetworkGenerator extends JApplet{
                     writeLinkTopology(path);
                     writeNodeTopology(path);
                     owner.resetExperimentExplorer();
-                    //owner.setNetworkEditorVisible(false);
                 }
                 
            } 
